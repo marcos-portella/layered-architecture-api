@@ -10,7 +10,7 @@ logger = logging.getLogger("API-Auditoria")
 tags_metadata = [
     {
         "name": "auth",
-        "description": "🔑 **Acesso e Segurança**. Registro de novos admins e"
+        "description": "🔑 **Acesso e Segurança**. Registr o de novos admins e"
         " geração de tokens JWT.",
     },
     {
