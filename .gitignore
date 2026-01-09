@@ -16,3 +16,10 @@ env/
 **/db.sqlite3
 *.sqlite3
 .mypy_cache
+
+# Test coverage
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover

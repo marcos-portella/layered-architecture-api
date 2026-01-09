@@ -28,12 +28,19 @@ class CustomerServices:
     ):
         cursor = db.cursor()
 
+        cursor.execute(
+            "SELECT id FROM customers WHERE cpf = %s", (customer.cpf,)
+        )
+        if cursor.fetchone():
+            cursor.close()
+            raise HTTPException(status_code=400, detail="CPF já cadastrado")
+
         print(
                 f"Ação: Usuário {user_email} adicionou mais um cliente"
             )
 
-        sql = "INSERT INTO customers (nome, idade) VALUES (%s, %s)"
-        cursor.execute(sql, (customer.name, customer.age))
+        sql = "INSERT INTO customers (nome, idade, cpf) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (customer.name, customer.age, customer.cpf))
         db.commit()
         new_id = cursor.lastrowid
         cursor.close()
@@ -54,13 +61,19 @@ class CustomerServices:
                 f"Ação: Usuário {user_email} atualizou o cliente {customer_id}"
             )
 
-            sql = "UPDATE customers SET nome = %s, idade = %s WHERE id = %s"
+            sql = """
+            UPDATE customers SET nome = %s, idade = %s, cpf = %s WHERE id = %s
+            """
             cursor.execute(
-                sql, (updated_data.name, updated_data.age, customer_id)
+                sql, (
+                    updated_data.name, updated_data.age,
+                    updated_data.cpf, customer_id
+                )
             )
             if cursor.rowcount == 0:
-                raise HTTPException(status_code=404, detail="Customer not "
-                                    "found")
+                raise HTTPException(
+                    status_code=404, detail="Customer not found"
+                )
             db.commit()
             return {
                 "message": "Customer updated successfully",
@@ -73,24 +86,21 @@ class CustomerServices:
         customer_id: int, db: MySQLConnectionAbstract, user_email: str
     ):
         with db.cursor() as cursor:
-            # Aqui você poderia verificar: esse cliente pertence a esse
-            # user_email? Por enquanto, apenas logamos quem deletou
-            print(
-                f"Ação: Usuário {user_email} deletou o cliente {customer_id}"
-            )
+            print(f"Ação: Usuário {user_email} deletou o cliente {customer_id}")
 
             sql = "DELETE FROM customers WHERE id = %s"
             cursor.execute(sql, (customer_id,))
 
+            # Se não deletou nada, lança erro e sai da função aqui
             if cursor.rowcount == 0:
                 raise HTTPException(
                     status_code=404, detail="Customer not found"
-                    )
+                )
 
+            # Se chegou aqui, é sucesso total. O commit e return PRECISAM rodar.
             db.commit()
             return {
                 "message": "Customer deleted successfully",
                 "id": customer_id,
                 "deleted_by": user_email
-                # Opcional: devolver quem deletou
             }

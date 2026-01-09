@@ -39,12 +39,19 @@ Project Structure
 Plaintext
 
 ├── app/
+
 │   ├── core/         # Config & Security settings
+
 │   ├── models/       # Pydantic Schemas
+
 │   ├── routers/      # API Endpoints (Skinny Controllers)
+
 │   ├── services/     # Business Logic (Service Layer)
+
 │   └── main.py       # Application Entry Point
+
 ├── tests/            # Pytest Integration Suite
+
 └── .env.example      # Environment Template
 
 

@@ -6,12 +6,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = TestClient(app)
+
+@pytest.fixture(scope="session")
+def client():
+    return TestClient(app)
 
 
 @pytest.fixture(scope="session")
-def auth_headers():
-
+def auth_headers(client):  # O NOME TEM QUE SER ESTE
     email = os.getenv("TEST_USER_EMAIL", "")
     password = os.getenv("TEST_USER_PASSWORD", "")
 
@@ -23,3 +25,13 @@ def auth_headers():
 
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def clean_customer(db):
+    yield  # Aqui o teste acontece
+    # O código abaixo roda DEPOIS que o teste termina
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM customers WHERE name LIKE '[TEST]%'")
+    db.commit()
+    cursor.close()
