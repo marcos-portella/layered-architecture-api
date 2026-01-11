@@ -1,3 +1,70 @@
+## Diário de Desenvolvimento
+
+**[10/01/2026] - Dia 04: O Desafio da Cobertura Total e Resiliência**
+
+### Visão Geral:
+
+O foco de hoje foi transformar uma API funcional em uma API **resiliente e auditável**. O grande objetivo era atingir **100% de code coverage**, o que nos forçou a explorar cenários de erro que raramente são testados em projetos iniciantes.
+
+### Problemas Enfrentados & Soluções:
+
+### 1. O "Gargalo" dos Testes (Lentidão):
+
+- **Problema**: À medida que a suite de testes crescia (27 testes de integração), o tempo de execução começou a incomodar (~3.04s). O banco de dados estava sendo reiniciado ou reconectado de forma ineficiente.
+
+- **Solução**: Refatoração das fixtures do Pytest no ``conftest.py`` para utilizar o escopo de **sessão** (``scope="session"``).
+
+- **Resultado**: Redução de 70% no tempo de execução, baixando para **1.04s**.
+
+### 2. O "Ponto Cego" da Infraestrutura:
+
+- **Problema**: Como testar se a API se comporta bem quando o MySQL cai, sem desligar o MySQL manualmente?
+
+- **Solução**: Implementação de **Mocking avançado** com ``unittest.mock.patch``. Simulamos exceções de baixo nível do driver ``mysql.connector``.
+
+- **Aprendizado**: Isso garantiu que a API retorne um erro **503 (Service Unavailable)** profissional em vez de um erro 500 genérico ou um crash de servidor.
+
+### 3. Erros de Tipagem Ocultos (Pylance/Pyright):
+
+- **Problema**: O VS Code apontava diversos avisos de tipos "Unknown" ou "None" ao manipular retornos do banco de dados, o que poderia causar erros de ``AttributeError`` em produção.
+
+- **Solução**: Introdução do ``pyrightconfig.json`` para regras estritas e uso de ``typing.cast`` para forçar a tipagem correta após validações de existência.
+
+### Atualizações & Melhorias Técnicas:
+
+### Camada de Serviço (Service Layer):
+
+- **Filtros Opcionais**: Refatoração do ``list_orders`` para lidar com filtros de ``customer_id`` de forma dinâmica. Antes, a lógica era rígida; agora, ela se adapta conforme os parâmetros da query.
+
+- **Skinny Controllers**: Removemos toda a lógica de agregação SQL dos routers. O Router agora apenas recebe a requisição e entrega a resposta, delegando o "trabalho sujo" para o ``OrderService``.
+
+### Segurança e Auditoria:
+
+- **JWT Autopopulate**: Implementamos a extração automática do e-mail do usuário logado através do token Bearer. Esse e-mail agora alimenta o campo ``created_by`` em todas as novas inserções, criando uma trilha de auditoria real.
+
+- **Middleware de Performance**: Adicionamos um middleware global que calcula o tempo de resposta e injeta no header ``X-Process-Time``. Isso permite monitorar quais rotas estão mais lentas sem precisar de ferramentas externas complexas.
+
+### Automação:
+
+- Criação de scripts ``run.ps1`` (para subir o servidor) e ``test.ps1`` (para rodar testes com cobertura), padronizando o ambiente para qualquer desenvolvedor que clonar o repositório.
+
+### Lições Aprendidas:
+
+**1. Testar o erro é tão importante quanto testar o sucesso**: Descobrimos ramificações no código que nunca seriam executadas em condições normais, mas que causariam bugs críticos em caso de falha de rede.
+
+**2. Mocks são aliados da velocidade**: Simular o banco de dados para testar comportamentos de borda economiza tempo e recursos.
+
+**3. Documentação é código**: O uso de Google Docstrings transformou a experiência de desenvolvimento, fornecendo ajuda imediata via IntelliSense durante a codificação.
+
+### Próximos Passos (Backlog):
+
+**[ ]** Containerização da aplicação com Docker.
+
+**[ ]** Implementação de Paginação (Pagination) em rotas de listagem.
+
+**[ ]** Sistema de Logging persistente em arquivos .log.
+
+
 ## JOURNAL - (07/01/2026)
 
 O foco de hoje foi a transição do projeto para um nível profissional, priorizando a **otimização da suíte de testes**, a **blindagem da autenticação e a segurança de credenciais**.
