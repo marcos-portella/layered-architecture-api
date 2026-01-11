@@ -1,6 +1,83 @@
 ## Diário de Desenvolvimento
+**[11/01/2026]**
 
-**[10/01/2026] - Dia 04: O Desafio da Cobertura Total e Resiliência**
+### Visão Geral:
+
+O dia de hoje foi marcado pela transição do Noach de um sistema local para uma aplicação **profissional e isolada**. O foco saiu apenas da "escrita de código" e entrou em **Qualidade de Software (QA)**, **Infraestrutura (Docker)** e **Estratégia de Deploy**.
+
+### O que foi implementado:
+
+**1. CRUD de Pedidos (Orders)**: Finalização das rotas para Criar, Ler, Atualizar e Deletar pedidos, com validação de existência do cliente.
+
+**2. Métricas e Analytics**: Criação de um endpoint de estatísticas (``/orders/stats``) utilizando funções de agregação do MySQL (``SUM``, ``COUNT``) para retornar o faturamento total e volume de pedidos.
+
+**3. Containerização**: Dockerização completa da API e do Banco de Dados, garantindo que o projeto rode em qualquer máquina sem "conflitos de ambiente".
+
+**4. Integridade Referencial**: Implementação de ``FOREIGN KEYS`` com ``ON DELETE CASCADE``, garantindo que se um cliente for deletado, seus pedidos também sejam removidos automaticamente, mantendo o banco limpo.
+
+### Problemas e Soluções (A Luta pelos 100%)
+
+### O Problema da Cobertura "Inalcançável":
+
+- **Problema**: O ``pytest-cov`` acusava 99% de cobertura. As linhas de "Semente" (Seed) do usuário administrador dentro de um bloco ``if not cursor.fetchone()`` não eram lidas porque o usuário já existia no banco de dados persistente do Docker.
+
+- **Tentativas Falhas**: Tentei usar comentários ``pragma: no cover``, mas o ambiente Docker ou a configuração do Coverage não os reconhecia, mantendo o erro de cobertura.
+
+- **A Descoberta**: Percebi que a lógica de "verificar se existe" no Python criava ramificações de código (branches) difíceis de testar em ambientes persistentes.
+
+- **A Solução Técnica**: Refatorei o código para usar **Idempotência SQL**. Removi o ``i``f do Python e utilizei o comando ``INSERT IGNORE`` do MySQL. Isso forçou o código a sempre passar pela linha de execução, delegando a inteligência ao banco de dados e atingindo os ``100.00% de cobertura``.
+
+![Required test coverage of 100% reached. Total coverage: 100.00%](./screenshots/coverage-100.png)
+
+### Aprendizados e Descobertas:
+
+- **Docker é Vida**: Aprendi que o comando ``docker-compose down -v`` é essencial para resetar o estado do banco e validar se o código de inicialização (tabelas e sementes) realmente funciona do zero.
+
+- **Arquitetura em Camadas**: Reforcei a importância de manter a lógica complexa no ``Service Layer``. Isso facilitou a escrita dos testes, pois pude testar a regra de negócio sem me preocupar com as rotas.
+
+- **Exposição Segura (ngrok)**: Descobri que posso transformar meu notebook em um servidor global usando túneis HTTP. Entendi que o **Swagger** se torna o meu cartão de visitas para recrutadores.
+
+- **Mentalidade de Engenheir**o: Entendi que um "recrutador" valoriza mais a minha **cobertura de testes** e a **organização do Docker** do que apenas as funcionalidades da tela.
+
+### Snippets de Ouro do Dia:
+
+**1. SQL Inteligente (Garantindo 100% de Cobertura)**
+
+````
+# Em vez de um 'if' no Python, o SQL resolve o problema de existência.
+# Isso garante que a linha de execução seja sempre visitada pelo teste.
+cursor.execute("""
+    INSERT IGNORE INTO users (email, hashed_password, full_name)
+    VALUES (%s, %s, %s)
+""", (test_email, test_password_hashed, "Admin Teste"))
+````
+
+**2. Agregação de Dados Profissional**
+`
+````
+# Uso de aliases e tratamento de valores nulos (or 0) para evitar quebras na API
+cursor.execute("SELECT COUNT(*) as total, SUM(amount) as revenue FROM orders")
+stats = cursor.fetchone()
+result = {
+    "total": stats['total'] or 0,
+    "revenue": float(stats['revenue'] or 0.0)
+}
+````
+
+### Status Final:
+
+- **Cobertura de Testes**: 100% (Blindado) ✅
+
+- **Ambiente**: Dockerizado ✅
+
+- **Segurança**: JWT implementado em todas as rotas sensíveis ✅
+
+- **Próximo Passo**: Exposição para a internet e documentação Swagger avançada.
+
+
+## Diário de Desenvolvimento
+
+**[10/01/2026] - O Desafio da Cobertura Total e Resiliência**
 
 ### Visão Geral:
 
