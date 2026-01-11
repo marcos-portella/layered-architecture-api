@@ -202,3 +202,33 @@ def test_order_full_lifecycle_coverage(client, auth_headers):
     # Cleanup
     client.delete(f"/orders/{order_id}", headers=auth_headers)
     client.delete(f"/customers/{customer_id}", headers=auth_headers)
+
+
+def test_get_order_stats_with_data(auth_headers, client):
+    """
+    Garante que as estatísticas sejam calculadas quando há dados.
+    """
+    # 1. Cria um cliente e um pedido para garantir que o banco não está vazio
+    random_cpf = "".join([str(random.randint(0, 9)) for _ in range(11)])
+    c_res = client.post(
+        "/customers/",
+        json={"name": "Stat User", "age": 25, "cpf": random_cpf},
+        headers=auth_headers
+    )
+    cust_id = c_res.json()["id"]
+
+    client.post(
+        "/orders/",
+        json={
+            "description": "Venda Real", "amount": 100.0, "customer_id": cust_id
+        },
+        headers=auth_headers
+    )
+
+    # 2. Chama o endpoint de stats (agora ele vai passar pela linha 154)
+    response = client.get("/orders/stats", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["total_orders"] > 0
+    assert data["total_revenue"] >= 100.0

@@ -3,6 +3,8 @@ import logging
 from typing import Callable
 from fastapi import FastAPI, Request, Response
 from app.routers import customers, orders, auth
+from contextlib import asynccontextmanager
+from app.database import create_tables
 
 # 1. Configuração do Log de Auditoria
 logging.basicConfig(level=logging.INFO)
@@ -42,6 +44,20 @@ tags_metadata = [
     },
 ]
 
+
+# Definimos o que acontece na vida da API
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- Tudo aqui roda quando a API LIGA ---
+    print("🚀 Iniciando API: Criando tabelas no banco...")
+    create_tables()
+
+    yield  # Aqui é onde a API fica funcionando
+
+    # --- Tudo aqui roda quando a API DESLIGA ---
+    print("🛑 Desligando API: Limpando conexões...")
+
+# Passamos o lifespan para o FastAPI
 app = FastAPI(
     title="API de Gestão de Pedidos - Marcos",
     openapi_tags=tags_metadata,
@@ -52,7 +68,8 @@ Esta API implementa uma arquitetura em camadas para controle de vendas com:
 * **Auditoria**: Registro automático de logs e tempo de resposta.
 * **Integridade**: Validação rigorosa de dados com Pydantic.
     """,
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 
@@ -108,3 +125,5 @@ def root():
     return {"message": "API Online - Monitoramento Ativo!"}
 
 # Para rodar a aplicação: uvicorn app.main:app --reload
+# docker builder prune -f
+# docker logs layered_fastapi_app
