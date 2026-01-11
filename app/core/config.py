@@ -1,20 +1,30 @@
 import os
+from typing import cast
 from dotenv import load_dotenv
 
-# Carrega as variáveis do ficheiro .env para o sistema
 load_dotenv()
 
 
 class Settings:
+    """
+    Centraliza as configurações globais da aplicação com tipagem forte.
+    """
     PROJECT_NAME: str = "Meu Projeto Final"
 
-    # Busca do .env ou usa um valor padrão (default)
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_USER = os.getenv("DB_USER")
-    DB_PASSWORD = os.getenv("DB_PASSWORD")
-    DB_DATABASE = os.getenv("DB_DATABASE")
+    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    DB_USER: str = cast(str, os.getenv("DB_USER"))
+    DB_PASSWORD: str = cast(str, os.getenv("DB_PASSWORD"))
+    DB_DATABASE: str = cast(str, os.getenv("DB_DATABASE"))
 
-    API_KEY = os.getenv("API_KEY")
+    API_KEY: str = cast(str, os.getenv("API_KEY"))
 
+
+settings = Settings()
+
+if not settings.API_KEY:
+    raise RuntimeError(
+        "ERRO CRÍTICO: A variável API_KEY não foi encontrada no ficheiro .env. "
+        "A segurança da API depende desta chave."
+    )
 
 settings = Settings()

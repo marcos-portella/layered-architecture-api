@@ -1,28 +1,35 @@
 from typing import Optional, List, Dict, Any, cast
-from mysql.connector.abstracts import MySQLConnectionAbstract
-from app.models.orders import OrderUpdate, Order
-from fastapi import HTTPException
 from datetime import datetime
+from mysql.connector.abstracts import MySQLConnectionAbstract
+from fastapi import HTTPException
+from app.models.orders import OrderUpdate, Order
 
 
 class OrderService:
+    """
+    Serviços de gerenciamento de pedidos (Orders).
+    Centraliza a lógica de vendas, estatísticas e vínculo com clientes.
+    """
+
     @staticmethod
     def list_orders(
         user_email: str,
         db: MySQLConnectionAbstract,
         customer_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
-
+        """
+        Lista todos os pedidos realizados, permitindo filtragem por cliente.
+        """
         cursor = db.cursor(dictionary=True)
 
         if customer_id:
             print(
-                    f"Ação: Usuário {user_email} buscou os pedidos do cliente"
-                    f"{customer_id}"
-                )
+                f"Ação: Usuário {user_email} buscou os pedidos do cliente "
+                f"{customer_id}"
+            )
 
         sql = """
-            SELECT o.*, c.nome as customer_name
+            SELECT o.*, c.name as customer_name
             FROM orders o
             INNER JOIN customers c ON o.customer_id = c.id
         """
@@ -36,33 +43,68 @@ class OrderService:
         results = cursor.fetchall()
         cursor.close()
 
-        # Usamos o cast para converter o tipo genérico do MySQL para o nosso
-        # tipo esperado
         return cast(List[Dict[str, Any]], results)
 
     @staticmethod
-    def update_order(
-        order_id: int, order_data: OrderUpdate, db: MySQLConnectionAbstract,
-        user_email: str
-    ):
+    def create_order(
+        order: Order, db: MySQLConnectionAbstract, user_email: str
+    ) -> Dict[str, Any]:
+        """
+        Registra um novo pedido vinculado a um cliente existente.
+        """
         cursor = db.cursor()
 
-        print(
-            f"Ação: Usuário {user_email} atualizou o pedido {order_id}"
+        print(f"Ação: Usuário {user_email} criou um pedido")
+
+        # Regra de Integridade: O cliente deve existir para receber um pedido
+        cursor.execute(
+            "SELECT id FROM customers WHERE id = %s", (order.customer_id,)
         )
-        cursor.execute("SELECT id FROM orders WHERE id = %s", (order_id,))
         if not cursor.fetchone():
             cursor.close()
             raise HTTPException(
-                status_code=404, detail="Pedido não encontrado"
+                status_code=404, detail="Cliente não encontrado"
             )
 
-        # 2. Executar a atualização
+        now = datetime.now()
+
         sql = """
-            UPDATE orders
-            SET description = %s, amount = %s
-            WHERE id = %s
+            INSERT INTO orders (description, amount, customer_id, created_at)
+            VALUES (%s, %s, %s, %s)
         """
+        cursor.execute(
+            sql, (order.description, order.amount, order.customer_id, now)
+        )
+
+        db.commit()
+        new_id = cursor.lastrowid
+        cursor.close()
+
+        return {
+            "order_id": new_id,
+            "message": "Pedido criado com sucesso!",
+            "timestamp": now,
+            "created_by": user_email
+        }
+
+    @staticmethod
+    def update_order(
+        order_id: int, order_data: OrderUpdate,
+        db: MySQLConnectionAbstract, user_email: str
+    ) -> Dict[str, Any]:
+        """
+        Atualiza as informações de um pedido específico.
+        """
+        cursor = db.cursor()
+
+        print(f"Ação: Usuário {user_email} atualizou o pedido {order_id}")
+
+        cursor.execute("SELECT id FROM orders WHERE id = %s", (order_id,))
+        if not cursor.fetchone():
+            cursor.close()
+            raise HTTPException(status_code=404, detail="Pedido não encontrado")
+
+        sql = "UPDATE orders SET description = %s, amount = %s WHERE id = %s"
         cursor.execute(
             sql, (order_data.description, order_data.amount, order_id)
         )
@@ -77,54 +119,16 @@ class OrderService:
         }
 
     @staticmethod
-    def create_order(
-        order: Order, db: MySQLConnectionAbstract, user_email: str
-    ):
-        cursor = db.cursor()
-
-        print(
-                f"Ação: Usuário {user_email} criou um pedido"
-            )
-
-        cursor.execute(
-            "SELECT id FROM customers WHERE id = %s", (order.customer_id,)
-        )
-        if not cursor.fetchone():
-            cursor.close()
-            raise HTTPException(
-                status_code=404, detail="Cliente não encontrado"
-            )
-
-        # 2. Pegar a data e hora de AGORA no Python
-        now = datetime.now()  # Ex: 2026-01-03 16:55:00
-
-        # 3. Inserir incluindo a data
-        sql = """
-            INSERT INTO orders (description, amount, customer_id, created_at)
-            VALUES (%s, %s, %s, %s)
+    def get_order_stats(
+        db: MySQLConnectionAbstract, user_email: str
+    ) -> Dict[str, Any]:
         """
-        cursor.execute(
-            sql, (order.description, order.amount, order.customer_id, now)
-        )
-
-        db.commit()
-        new_id = cursor.lastrowid
-        cursor.close()
-
-        return {
-            "order_ id": new_id,
-            "message": "Pedido criado com sucesso!",
-            "timestamp": now,
-            "created_by": user_email
-        }
-
-    @staticmethod
-    def get_order_stats(db: MySQLConnectionAbstract, user_email: str):
+        Calcula métricas globais de vendas: total de pedidos, receita e ticket
+        médio.
+        """
         cursor = db.cursor(dictionary=True)
 
-        print(
-                f"Ação: Usuário {user_email} buscou os status de vendas"
-            )
+        print(f"Ação: Usuário {user_email} buscou os status de vendas")
 
         sql = """
             SELECT
@@ -136,11 +140,10 @@ class OrderService:
 
         cursor.execute(sql)
         raw_data = cursor.fetchone()
-
         stats = cast(Optional[Dict[str, Any]], raw_data)
         cursor.close()
 
-        if not stats:
+        if not stats or stats['total_orders'] == 0:
             return {
                 "total_orders": 0,
                 "total_revenue": 0.0,
@@ -148,10 +151,9 @@ class OrderService:
                 "created_by": user_email
             }
 
-        # Agora o Pylance sabe que stats['chave'] é válido
         return {
-            "total_orders": stats['total_orders'] or 0,
+            "total_orders": stats['total_orders'],
             "total_revenue": float(stats['total_revenue'] or 0),
             "average_order_value": float(stats['average_order_value'] or 0),
-            "geted_by": user_email
+            "generated_by": user_email
         }

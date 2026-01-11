@@ -3,11 +3,16 @@
         "app",
         "tests"
     ],
+    "exclude": ["**/node_modules", "**/__pycache__"],
+    "reportMissingImports": true,
+    "pythonPath": "./",
     "executionEnvironments": [
         {
             "root": "."
         }
     ],
     "typeCheckingMode": "basic",
-    "reportMissingTypeStubs": false
+    "reportMissingTypeStubs": false,
+    "python.analysis.extraPaths": ["."],
+    "python.autoComplete.extraPaths": ["."]
 }
