@@ -1,3 +1,12 @@
+## 🚀 Live Demo (External Access)
+
+The API is currently live and available for testing through a secure **ngrok**tunnel. 
+
+* **Interactive Documentation:** [Clique aqui para acessar a documentação interativa](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/docs)
+* **System Health Check:** [Check de Integridade](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/)
+
+> **Note:** As this is running in a local development environment (Docker), the link may be temporarily offline during maintenance or system updates.
+
 ## Layered Architecture API (Customers & Orders)
 
 A professional REST API built with **FastAPI** and **MySQL**, focusing on clean code principles, security, and high-performance testing. This project manages customers and their orders using a decoupled **Service Layer** architecture.

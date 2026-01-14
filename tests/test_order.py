@@ -206,29 +206,38 @@ def test_order_full_lifecycle_coverage(client, auth_headers):
 
 def test_get_order_stats_with_data(auth_headers, client):
     """
-    Garante que as estatísticas sejam calculadas quando há dados.
+    Garante que as estatísticas sejam calculadas e o banco limpo após o teste.
     """
-    # 1. Cria um cliente e um pedido para garantir que o banco não está vazio
     random_cpf = "".join([str(random.randint(0, 9)) for _ in range(11)])
-    c_res = client.post(
-        "/customers/",
-        json={"name": "Stat User", "age": 25, "cpf": random_cpf},
-        headers=auth_headers
-    )
-    cust_id = c_res.json()["id"]
+    cust_id = None
 
-    client.post(
-        "/orders/",
-        json={
-            "description": "Venda Real", "amount": 100.0, "customer_id": cust_id
-        },
-        headers=auth_headers
-    )
+    try:
+        # 1. Cria um cliente e um pedido
+        c_res = client.post(
+            "/customers/",
+            json={"name": "Stat User", "age": 25, "cpf": random_cpf},
+            headers=auth_headers
+        )
+        cust_id = c_res.json()["id"]
 
-    # 2. Chama o endpoint de stats (agora ele vai passar pela linha 154)
-    response = client.get("/orders/stats", headers=auth_headers)
-    assert response.status_code == 200
-    data = response.json()
+        client.post(
+            "/orders/",
+            json={
+                "description": "Venda Real",
+                "amount": 100.0,
+                "customer_id": cust_id},
+            headers=auth_headers
+        )
 
-    assert data["total_orders"] > 0
-    assert data["total_revenue"] >= 100.0
+        # 2. Valida estatísticas
+        response = client.get("/orders/stats", headers=auth_headers)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_orders"] > 0
+        assert data["total_revenue"] >= 100.0
+
+    finally:
+        # 3. LIMPEZA: Remove o cliente (o CASCADE removerá o pedido
+        # automaticamente)
+        if cust_id:
+            client.delete(f"/customers/{cust_id}", headers=auth_headers)

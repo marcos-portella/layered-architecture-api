@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request, Response
 from app.routers import customers, orders, auth
 from contextlib import asynccontextmanager
 from app.database import create_tables
+from fastapi.middleware.cors import CORSMiddleware
 
 # 1. Configuração do Log de Auditoria
 logging.basicConfig(level=logging.INFO)
@@ -59,7 +60,7 @@ async def lifespan(app: FastAPI):
 
 # Passamos o lifespan para o FastAPI
 app = FastAPI(
-    title="API de Gestão de Pedidos - Marcos",
+    title="API de Gestão de Pedidos - Marcos Portella",
     openapi_tags=tags_metadata,
     description="""
 ### Gerenciamento Profissional de Clientes e Pedidos
@@ -70,6 +71,15 @@ Esta API implementa uma arquitetura em camadas para controle de vendas com:
     """,
     version="1.0.0",
     lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    # Permite que o link do ngrok funcione em qualquer navegador
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
