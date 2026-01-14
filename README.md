@@ -2,8 +2,8 @@
 
 The API is currently live and available for testing through a secure **ngrok**tunnel. 
 
-* **Interactive Documentation:** [Clique aqui para acessar a documentação interativa](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/docs)
-* **System Health Check:** [Check de Integridade](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/)
+* **Interactive Documentation:** [Explore Swagger UI](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/docs)
+* **System Health Check:** [API Status](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/)
 
 > **Note:** As this is running in a local development environment (Docker), the link may be temporarily offline during maintenance or system updates.
 
