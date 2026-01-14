@@ -6,7 +6,7 @@ Hoje o foco foi transformar os dados brutos de pedidos em inteligência de negó
 
 ### Implementações de Business Intelligence:
 
-- **Integração do Pandas**: Adicionamos a biblioteca Pandas ao ecossistema Noach para processamento de dados. Resolvemos conflitos de ambiente entre o VS Code (Pylance) e o Docker, garantindo que o "Intellisense" funcionasse localmente enquanto o código rodava no container.
+- **Integração do Pandas**: Adicionamos a biblioteca Pandas ao ecossistema para processamento de dados. Resolvemos conflitos de ambiente entre o VS Code (Pylance) e o Docker, garantindo que o "Intellisense" funcionasse localmente enquanto o código rodava no container.
 
 - **Relatório de Ranking**: Criamos um novo endpoint ``/orders/report`` que não apenas lista dados, mas os processa. O sistema agora agrupa vendas por cliente, soma os valores e entrega um ranking de faturamento ordenado do maior para o menor.
 
