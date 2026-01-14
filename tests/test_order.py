@@ -241,3 +241,50 @@ def test_get_order_stats_with_data(auth_headers, client):
         # automaticamente)
         if cust_id:
             client.delete(f"/customers/{cust_id}", headers=auth_headers)
+
+
+def test_get_sales_report_success(auth_headers, client):
+    """
+    Testa se o relatório de BI (Pandas) está calculando o ranking corretamente.
+    """
+    # 1. Setup: Cria um cliente e um pedido para ter dados no relatório
+    random_cpf = f"999{random.randint(100, 999)}777{random.randint(10, 99)}"
+    c_res = client.post(
+        "/customers/",
+        json={"name": "BI User",
+              "age": 30,
+              "cpf": random_cpf},
+        headers=auth_headers
+    )
+    cust_id = c_res.json()["id"]
+
+    client.post(
+        "/orders/",
+        json={"description": "Compra BI",
+              "amount": 500.0,
+              "customer_id": cust_id},
+        headers=auth_headers
+    )
+
+    try:
+        response = client.get("/orders/report", headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "top_revenue_ranking" in data
+        assert str(cust_id) in data["top_revenue_ranking"]
+        assert data["top_revenue_ranking"][str(cust_id)] == 500.0
+
+    finally:
+        client.delete(f"/customers/{cust_id}", headers=auth_headers)
+
+
+def test_get_sales_report_empty(auth_headers, client):
+
+    response = client.get("/orders/report", headers=auth_headers)
+
+    data = response.json()
+
+    if not data.get("top_revenue_ranking"):
+        assert data["message"] == "No data available for report"
+        assert data["ranking"] == {}

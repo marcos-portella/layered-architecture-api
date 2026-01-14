@@ -58,3 +58,8 @@ def get_order_stats(
     Retorna métricas consolidadas: total de vendas, receita e ticket médio.
     """
     return OrderService.get_order_stats(db, user_email)
+
+
+@router.get("/report", tags=["📈 Business Intelligence"])
+def get_report(db=Depends(get_db), token=Depends(get_current_user)):
+    return OrderService.get_sales_report(db, user_email=token)

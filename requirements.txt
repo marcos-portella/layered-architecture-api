@@ -11,3 +11,4 @@ bcrypt==4.0.1
 email-validator
 pydantic[email]
 python-multipart
+pandas>=2.2.3

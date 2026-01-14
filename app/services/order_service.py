@@ -3,6 +3,7 @@ from datetime import datetime
 from mysql.connector.abstracts import MySQLConnectionAbstract
 from fastapi import HTTPException
 from app.models.orders import OrderUpdate, Order
+import pandas as pd
 
 
 class OrderService:
@@ -156,4 +157,33 @@ class OrderService:
             "total_revenue": float(stats['total_revenue'] or 0),
             "average_order_value": float(stats['average_order_value'] or 0),
             "generated_by": user_email
+        }
+
+    @staticmethod
+    def get_sales_report(
+        db: MySQLConnectionAbstract, user_email: str
+    ) -> Dict[str, Any]:
+        """
+        Gera um relatório avançado de BI usando Pandas.
+        Retorna o ranking de faturamento por cliente.
+        """
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT customer_id, amount FROM orders")
+        results = cursor.fetchall()
+        cursor.close()
+
+        if not results:
+            return {"message": "No data available for report", "ranking": {}}
+
+        df = pd.DataFrame(results)
+
+        ranking = df.groupby(
+            'customer_id'
+        )['amount'].sum().sort_values(ascending=False)
+
+        return {
+            "report_date": datetime.now(),
+            "generated_by": user_email,
+            "total_customers_analyzed": int(df['customer_id'].nunique()),
+            "top_revenue_ranking": ranking.to_dict()
         }
