@@ -1,4 +1,57 @@
 ## Diário de Desenvolvimento
+
+**[14/01/2026] - Business Intelligence e Qualidade Total**
+ 
+Hoje o foco foi transformar os dados brutos de pedidos em inteligência de negócio e garantir que cada linha de código escrita estivesse protegida por testes automáticos, alcançando a marca de **100% de cobertura**.
+
+### Implementações de Business Intelligence:
+
+- **Integração do Pandas**: Adicionamos a biblioteca Pandas ao ecossistema Noach para processamento de dados. Resolvemos conflitos de ambiente entre o VS Code (Pylance) e o Docker, garantindo que o "Intellisense" funcionasse localmente enquanto o código rodava no container.
+
+- **Relatório de Ranking**: Criamos um novo endpoint ``/orders/report`` que não apenas lista dados, mas os processa. O sistema agora agrupa vendas por cliente, soma os valores e entrega um ranking de faturamento ordenado do maior para o menor.
+
+- **Lógica de Dados**: Implementamos o uso de ``DataFrames`` para converter resultados do MySQL diretamente em estruturas analíticas, utilizando métodos como ``.groupby()`` e ``.sort_values()``.
+
+### Refatoração e Arquitetura em Camadas:
+
+- **Correção de Tipagem no Router**: Ajustamos a injeção de dependência do FastAPI para lidar corretamente com o token de autenticação. Corrigimos um erro de ``TypeError`` ao acessar índices de string, padronizando o recebimento do ``user_email`` vindo do ``get_current_user``.
+
+- **Tratamento de Estados Vazios**: Blindamos a ``OrderService`` com cláusulas de guarda. Agora, se o relatório for solicitado sem que existam pedidos no banco, a API retorna uma mensagem clara em vez de falhar, mantendo a estabilidade do sistema.
+
+### Cultura de Testes e Cobertura 100%:
+
+- **Garantia de Qualidade**: Expandimos a suíte de testes para **36 casos de teste.**
+
+![Required test coverage of 100% reached. Total coverage: 100.00%](./screenshots/14-01-2026.png)
+
+- **Testes de Casos de Borda (Edge Cases)**: Criamos testes específicos para o novo endpoint de BI, cobrindo tanto o sucesso (cálculo correto do ranking) quanto o cenário de banco vazio (para cobrir as linhas de exceção no Service).
+
+- **Selo de 100%**: O projeto agora passa pelo rigoroso critério de ``--cov-fail-under=100``, o que significa que nenhum código novo entra no sistema sem estar devidamente testado.
+
+### Códigos em Destaque
+
+**1. Processamento de BI com Pandas**:
+
+````
+# No OrderService, transformando SQL em inteligência
+df = pd.DataFrame(results)
+ranking = df.groupby('customer_id')['amount'].sum().sort_values(ascending=False)
+return ranking.to_dict()
+````
+
+**2. Teste de Cobertura para Caminho Vazio**:
+
+````
+# Garantindo que a API responda bem mesmo sem dados
+def test_get_sales_report_empty(auth_headers, client):
+    response = client.get("/orders/report", headers=auth_headers)
+    assert response.status_code == 200
+    assert response.json()["message"] == "No data available for report"
+
+````
+
+## Diário de Desenvolvimento
+
 **[11/01/2026]**
 
 ### Visão Geral:
