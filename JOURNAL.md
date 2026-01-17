@@ -1,5 +1,74 @@
 ## Diário de Desenvolvimento
 
+**[17/01/2026] - A Transição Poliglota e Infraestrutura de Ferro**
+
+
+### Visão Geral
+
+Hoje o projeto **layered-architecture-api** deixou de ser uma aplicação exclusivamente Python para se tornar um ecossistema poliglota. O foco foi a implementação do ambiente **Java 21**, a estabilização de túneis de rede e a compreensão da anatomia de baixo nível da JVM (Java Virtual Machine).
+
+**1. Desafios de Infraestrutura (O "Engarrafamento" do Windows)**
+
+O dia começou com um conflito de recursos. Tentamos instalar o JDK enquanto o VS Code tentava se atualizar em segundo plano.
+
+- **O Problema**: Erros de "Outra instalação em andamento".
+
+- **A Solução**: Identificamos processos fantasmas (``msiexec.exe`` e instaladores de 32 bits em branco). Aprendemos a monitorar e finalizar tarefas críticas para liberar o barramento do sistema.
+
+- **vmmemWSL**: Descobrimos que o alto consumo de memória vinha do subsistema Linux (WSL2), essencial para quem roda Docker, e aprendemos o comando de purga: ``wsl --shutdown``.
+
+**2. O Ecossistema Java (JDK 21 & Bytecode)**
+
+Diferente do Python (interpretado), o Java nos apresentou o conceito de Compilação:
+
+- **Fluxo**: Escrevemos em ``.java``, o ``javac`` transforma em ``.class`` (Bytecode) e o ``java`` executa.
+
+- **Git Hygiene**: Implementamos a regra de ouro do ``*.class`` no ``.gitignore``. Entendemos que o Bytecode é lixo de repositório, pois pode ser regenerado a qualquer momento.
+
+- **Descompilação**: Analisamos como o IntelliJ/VS Code tenta ler um arquivo binário, revelando nomes de variáveis genéricos (var0, var1) — a prova de que o computador não precisa de nomes bonitos, mas nós sim.
+
+**3. Anatomia do Código: Dessecando o ``Main``**
+
+Dedicamos tempo para entender a assinatura sagrada do Java:
+
+- **``public static void main(String[] args)``**:
+
+    - **``public``**: Visibilidade total para a JVM.
+
+    - **``static``**: O motor roda sem precisar de uma "instância" prévia (o botão de fora da fábrica).
+
+    - **``void``**: Execução pura, sem retorno de dados.
+
+'- **``String[] args``**: A porta de entrada para comandos via Terminal (como os argumentos do ngrok).
+
+**4. Gestão de Fluxos e Teclado (System.in vs Terminal)**
+
+Refinamos a semântica do que é "entrada de dados":
+
+- **Scanner & System.in**: O ``System.in`` é o "cano" de bytes brutos do terminal. O ``Scanner`` é o filtro inteligente que instalamos (``new``) para converter esses bytes em tipos de dados úteis (``nextLine``, ``nextInt``, ``nextDouble``).
+
+- **Resource Management**: Aprendemos a importância do ``.close()``. No Noach, não deixamos conexões abertas. Se abrimos um canal com o sistema, nós o fechamos para evitar memory leaks.
+
+**5. Lógica de Negócio e Validação**
+Implementamos a primeira trava de segurança no módulo de estoque:
+
+- **Sintaxe**: Trocamos a indentação do Python pelos delimitadores ``{ }`` do Java.
+
+- **Regra**: Criamos uma validação dupla para ``quantity > 0`` e ``quantity <= 0``, garantindo que o valor total do inventário só seja calculado e exibido se os dados forem íntegros.
+
+### Tech Stack do Dia:
+
+- **Linguagem**: Java 21 (LTS).
+
+- **Runtime**: OpenJDK (Temurin).
+
+- **Tools**: ngrok (Persistent Tunnel), PowerShell (run.ps1/test.ps1 automation).
+
+- **Concepts**: JVM, Bytecode, Standard I/O, Git Flow.
+
+
+## Diário de Desenvolvimento
+
 **[14/01/2026] - Business Intelligence e Qualidade Total**
  
 Hoje o foco foi transformar os dados brutos de pedidos em inteligência de negócio e garantir que cada linha de código escrita estivesse protegida por testes automáticos, alcançando a marca de **100% de cobertura**.
