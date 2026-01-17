@@ -68,3 +68,6 @@ I maintain a detailed development log tracking my daily progress, technical chal
 
 You can follow the step-by-step evolution of this project here:
 👉 **[View Development Journal (JOURNAL.md)](./JOURNAL.md)**
+
+### Evolution Roadmap
+Currently, **layered-architecture-api** is 100% powered by Python and FastAPI. I have initiated **Java** studies (located in the ``/java_study`` directory) with the goal of eventually migrating performance-critical modules to microservices using **Java** and **Spring Boot**.
