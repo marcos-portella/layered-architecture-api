@@ -1,5 +1,71 @@
 ## Diário de Desenvolvimento
 
+**[18/01/2026] - Arquitetura Funcional e Refinamento de Ambiente**
+
+### O Grande Salto: De ``void`` para ``return``
+
+Hoje, o foco principal foi entender que um método não serve apenas para "executar ordens" e imprimir textos, mas para **processar informações e devolver resultados**.
+
+**1. O Fim do "Gritador" (``void``)**
+
+Até então, meus métodos eram como alto-falantes: eles faziam o cálculo e já imprimiam o resultado na tela. Isso é limitado porque o resto do programa não consegue usar aquele valor para nada.
+
+- **Aprendizado**: O modificador ``void`` significa "vazio". Ele executa a ação, mas não entrega nada de volta.
+
+**2. O Método "Calculadora" (return)**
+Aprendi a substituir o ``void`` por tipos de dados específicos (``int``, ``double``, ``String``, ``boolean``).
+
+- **A promessa**: Se eu defino um método como ``public static int``, eu estou prometendo ao Java que, ao final da execução, eu vou entregar um número inteiro.
+
+- **O comando ``return``**: É o comando que cumpre essa promessa. Ele encerra a função e "cospe" o valor para fora, permitindo que eu o guarde em uma variável no ``main``.
+
+**Exemplo Prático**:
+
+````
+public static double calcularDesconto(double valor) {
+    return valor * 0.10; // O resultado "sai" da função e volta para quem chamou
+}
+````
+
+### Padronização e Nomenclatura (Regras de Ouro)
+
+Consolidei as regras de escrita que o compilador do Java exige. No Python, éramos mais livres; no Java, somos engenheiros de precisão.
+
+- **PascalCase**: Usado estritamente para **Classes** e **Arquivos**. Se a classe é ``SegurancaProject``, o arquivo **TEM** que ser ``SegurancaProject.java``.
+
+- **camelCase**: Usado para **Métodos** e **Variáveis**. Ex: ``verificarHorario``, ``pesoCarga``.
+
+- **Case Sensitivity**: O Java diferencia ``Motorista`` de ``motorista``. Um erro de letra maiúscula derruba o sistema.
+
+### Otimização do Ambiente de Trabalho (VS Code)
+
+Não basta codar bem, o ambiente tem que ser produtivo. Enfrentamos a "sujeira" visual do terminal.
+
+- **Settings.json**: Aprendi a manipular as entranhas do VS Code para esconder comandos de sistema irrelevantes.
+
+- **Desafio da ``.venv``**: Entendi o equilíbrio entre ter um terminal limpo e manter a consciência do ambiente virtual do Python ativo.
+
+- **Customização do Executor**: Explorei o ``executorMap`` para tentar automatizar o ``clear`` do terminal antes da execução do Java.
+
+- **Trade-off**: Decidi manter o terminal com as informações de comando padrão para não perder a referência visual da ``.venv`` (identidade do ambiente).
+
+### Lógica Avançada: Ifs Aninhados e Parâmetros
+Reforcei a capacidade de passar múltiplos dados para um método e fazer verificações em camadas (um ``if`` dentro de outro). Isso é o que permite ao Project decidir, por exemplo, se uma carga entra pelo peso E pela licença simultaneamente.
+
+### Checkpoint de Progresso
+[x] Entender a diferença entre ``void`` e métodos com retorno.
+
+[x] Aplicar tipagem forte em parâmetros de métodos.
+
+[x] Configurar o VS Code para reduzir ruído visual.
+
+[x] Consolidar as regras de PascalCase e camelCase.
+
+**Próximo Passo**: Explorar como o Java lida com listas de dados (Arrays) para que o sistema do Noach possa processar não apenas um, mas centenas de motoristas de uma só vez.
+
+
+## Diário de Desenvolvimento
+
 **[17/01/2026] - A Transição Poliglota e Infraestrutura de Ferro**
 
 
