@@ -1,5 +1,64 @@
 ## Diário de Desenvolvimento
 
+**[20/01/2026] - Arrays, Entrada Dinâmica (Scanner) e Engenharia de Bytecode**
+
+### 1. Manipulação Avançada de Arrays (Vetores)
+Hoje entendi que os Arrays são o coração de qualquer sistema logístico. Aprendi a lidar com eles não apenas como listas, mas como estruturas de memória com regras rígidas.
+
+- **Índices e Limites**: Consolidei que o Java conta a partir do ``0``. Aprendi a regra de ouro: o último índice é sempre ``length - 1``.
+
+- **Código Resiliente**: Aprendi a parar de usar números fixos (ex: ``i < 4``) e passar a usar ``i < array.length``. Isso garante que, se o tamanho da frota de caminhões mudar, o código continua funcionando sem erros.
+
+- **Iteração Reversa**: Pratiquei a lógica de "voltar no tempo" usando ``i--`` e iniciando o loop no último índice para ler o pátio de trás para frente.
+
+### 2. Interatividade com a Classe ``Scanner``
+O programa deixou de ser estático. Agora ele "ouve" o usuário.
+
+- **Captura Dinâmica**: Usei o ``leitor.nextDouble()`` para receber pesos de caminhões via teclado.
+
+- **Preenchimento de Gavetas**: Usei o loop ``for`` para perguntar o peso repetidas vezes e salvar cada resposta em uma "gaveta" específica do array (``pesos[i]``).
+
+### 3. O Poder do ``return`` e Modularização
+Este foi o "pulo do gato" de hoje. Em vez de calcular tudo no ``main``, criei uma função especialista.
+
+- **Assinatura do Método**: Entendi que ``public static double calcularMedia`` é uma promessa de que a função vai processar um array e devolver um número decimal exato.
+
+- **Processamento Interno**: Usei um acumulador (``soma += peso``) para somar todos os itens da lista antes de realizar a divisão.
+
+### 4. Anatomia do Bytecode (O que o Java esconde)
+Ao descompilar o arquivo ``.class``, descobri como o Java realmente se comporta:
+
+- **Construtor Padrão Implícito**: Vi que o Java cria automaticamente um ``public NomeDaClasse() {}`` para permitir que o objeto exista na memória, mesmo que eu não escreva isso.
+
+- **Açúcar Sintático**: Descobri que o ``for-each`` (``String nome : vagas``) é apenas um jeito bonito que o Java criou para escrevermos menos, mas que o computador transforma em um ``for`` tradicional por baixo dos panos.
+
+### Exemplo de Código Consolidado (Versão Final)
+
+````
+public static double calcularMedia(double[] pesos) {
+    double soma = 0.0;
+    for (double peso : pesos) {
+        soma += peso; // Operador de atribuição composta
+    }
+    return soma / pesos.length; // Divisão dinâmica por tamanho do array
+}
+````
+
+### Checkpoint de Evolução:
+
+[x] Dominar loops crescentes e decrescentes.
+
+[x] Preencher arrays com entrada do usuário via Scanner.
+
+[x] Criar métodos com lógica de ``return`` para processamento de listas.
+
+[x] Entender a diferença entre código fonte (``.java``) e bytecode (``.class``).
+
+**Próximo Passo**: Implementar filtros de segurança para validar se o peso dos caminhões está dentro do limite permitido (2.000kg a 10.000kg).
+
+
+## Diário de Desenvolvimento
+
 **[18/01/2026] - Arquitetura Funcional e Refinamento de Ambiente**
 
 ### O Grande Salto: De ``void`` para ``return``
