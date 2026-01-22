@@ -1,5 +1,37 @@
 ## Diário de Desenvolvimento
 
+**[22/01/2026] - Engenharia de Frontend, Escopo de Memória e Paradigmas Funcionais**
+
+Nesta etapa, dei os primeiros passos fundamentais na integração do ecossistema do **Projeto layered-architecture-api** com interfaces web modernas. O objetivo central foi entender como o navegador processa a lógica de comportamento e como organizar um projeto que escala do servidor para a tela do usuário.
+
+### Arquitetura e Estruturação Web
+
+A base foi estabelecida com a criação de um boilerplate **HTML5 semântico**, priorizando a organização profissional de diretórios. Ao separar a lógica em uma pasta ``scripts/``, apliquei o princípio de separação de responsabilidades. Um ponto crítico de aprendizado foi o uso do atributo ``defer`` na integração dos scripts externos. Compreendi que o carregamento assíncrono é vital para a performance, garantindo que o JavaScript não bloqueie a renderização do DOM (Document Object Model), permitindo uma experiência de usuário fluida.
+
+### Gestão de Memória e Escopo (var, let, const)
+
+Aprofundei-me na mecânica interna do JavaScript, explorando como a linguagem gerencia variáveis. Através de testes práticos, analisei o comportamento de:
+
+- **``var``**: Entendi o conceito de hoisting e como seu escopo de função pode causar "vazamentos" de dados para fora de blocos lógicos como ``if``.
+
+**``let e const``**: Adotei o padrão moderno de escopo de bloco, essencial para evitar bugs de colisão de nomes e garantir que a memória seja liberada corretamente. O uso de ``const`` tornou-se minha regra para imutabilidade, aumentando a segurança do código.
+
+### Paradigma Funcional e Sintaxe Moderna (ES6+)
+
+A evolução das funções foi o ponto alto deste estudo. Saí das funções regulares para explorar o dinamismo do JavaScript:
+
+- **Funções Anônimas e Expressões**: Entendi como tratar funções como "cidadãos de primeira classe", podendo atribuí-las a variáveis.
+
+- **IIFE (Immediately Invoked Function Expressions)**: Apliquei o padrão de execução imediata para isolar escopos, uma técnica clássica para evitar poluição do objeto global ``window``.
+
+- **Arrow Functions & Callbacks**: Dominei a sintaxe de flecha (``=>``), percebendo sua elegância em retornos implícitos e sua praticidade ao serem usadas como callbacks em métodos de alta ordem, como o ``.map()``. Ver os dados de um array de números sendo transformados em tempo real consolidou minha visão sobre processamento de dados no Frontend.
+
+### Padronização e Qualidade (JSDoc & Tooling)
+
+Para manter o rigor técnico que já aplico no Python e Java, implementei a documentação via **JSDoc**. O uso de ``@param`` e ``@return`` não apenas ajuda na leitura, mas prepara o código para ferramentas de autocompletar e IntelliSense. Além disso, configurei o ambiente com **ESLint e Prettier** para garantir a consistência sintática (como a obrigatoriedade do ponto e vírgula), automatizando a qualidade do código a cada salvamento.
+
+## Diário de Desenvolvimento
+
 **[20/01/2026] - Arrays, Entrada Dinâmica (Scanner) e Engenharia de Bytecode**
 
 ### 1. Manipulação Avançada de Arrays (Vetores)
