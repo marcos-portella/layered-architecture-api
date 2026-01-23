@@ -1,30 +1,46 @@
-//Desafio: O Gerenciador de Cargas do Marcos
+// Regras de Negócio:
 
-// Você vai criar um sistema que registra o peso de 4 caminhões que estão na fila da balança.
+// O peso permitido é entre 2.000kg e 10.000kg.
 
-// O que o programa deve fazer:
+// Se o usuário digitar um peso inválido, o programa deve exibir uma mensagem 
+// de erro: "Peso inválido! O caminhão deve ter entre 2000kg e 10000kg.".
 
-// Criar um array de double com 4 posições chamado pesos.
+// O pulo do gato: O programa não deve avançar para o próximo caminhão enquanto 
+// o peso atual não for válido. (Dica: você vai precisar de um loop dentro do 
+// outro ou de uma lógica de repetição específica).
 
-// Usar um for tradicional para perguntar ao usuário o peso de cada um dos 4 caminhões e guardar no array.
-
-// Após os cadastros, o programa deve calcular a Média de Peso desses caminhões. (Dica: Somar todos e dividir por 4).
-
-// Usar um For-Each para imprimir todos os pesos registrados.
-
-// No final, imprimir a média calculada.
-
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ExercicioGerenciador {
+    public static void limparConsole(){
+        try {
+            if (
+                System.getProperty("os.name")
+                    .contains("Windows")
+            ) {
+                new ProcessBuilder("cmd", "/c", "cls")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+            } else {
+                    new ProcessBuilder("clear")
+                        .inheritIO()
+                        .start()
+                        .waitFor();
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Erro ao limpar o console: " + e.getMessage());
+        }
+    }
     
     public static double calcularMedia(double[] pesos) {
         double soma = 0.0;
         for (double peso : pesos) {
             soma += peso;
         }
-        double soma2 = soma / pesos.length;
-        return soma2;
+        return soma / pesos.length;
     }
     
     public static void main(String[] args) {
@@ -33,15 +49,43 @@ public class ExercicioGerenciador {
         Scanner leitor = new Scanner(System.in);
 
         for (int i = 0; i < pesos.length; i++) {
-            System.out.print("Qual o peso do caminhão? ");
-            pesos[i] = leitor.nextDouble();
+            boolean trava = false;
+            while(!trava) {
+                try {
+                    System.out.println("Valores válidos: 2000 á 10000.");
+                    System.out.print("Qual o peso do caminhão? ");
+                    double valor = leitor.nextDouble();
+                    
+                    if (valor < 2000 || valor > 10000) {
+                        limparConsole();
+                        System.out.println("Valor não válido.");
+                    } else {
+                        limparConsole();
+                        pesos[i] = valor;
+                        System.out.println("Peso válido!");
+                        trava = true;
+                        System.out.println(
+                            "Vagas disponíveis: " + (pesos.length - (i + 1))
+                        );
+                    }
+                }catch (InputMismatchException e) {
+                    limparConsole();
+                    System.out.println(
+                        "Erro: Você deve digitar apenas números!"
+                    );
+                    leitor.next();
+                }
+            }
         }
 
         int i = 1;
+        limparConsole();
 
         for (double peso : pesos) {
 
-            System.out.println("O peso do caminhão no °" + i + " espaço é: " + peso);
+            System.out.println(
+                "O peso do caminhão no °" + i + " espaço é: " + peso
+            );
 
             i += 1;
         }
