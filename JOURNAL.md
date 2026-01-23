@@ -1,5 +1,61 @@
 ## Diário de Desenvolvimento
 
+**[23/01/2026] - Fundamentos de Operadores: Aritmética, Lógica e Atribuição Composta em JS**
+
+Nesta etapa, explorei a "sala de máquinas" do JavaScript. O objetivo foi dominar como a linguagem processa cálculos, avalia condições lógicas e gerencia a atualização de variáveis na memória de forma eficiente.
+
+### 1. Operações Aritméticas e Precisão Matemática
+
+Implementei uma função ``calculadora`` que serve como laboratório para os operadores numéricos. Diferente de outras linguagens, o JavaScript lida com números de forma muito dinâmica, e aqui consolidei:
+
+- **Operadores Binários Standard**: Adição (``+``), Subtração (``-``), Multiplicação (``*``) e Divisão (``/``).
+
+- **Módulo (``%``)**: Essencial para encontrar o resto de divisões, uma ferramenta lógica fundamental para identificar números pares, ímpares ou criar ciclos.
+
+**Exponenciação (``**``)**: Uso da sintaxe moderna (ES6+) para potências, substituindo a necessidade do antigo objeto ``Math.pow()``.
+
+**Incremento (``++``) e Decremento (``--``)**: Pratiquei a manipulação direta do valor da variável, um conceito vital para o controle de laços de repetição (loops).
+
+**O fenômeno ``NaN`` (Not a Number)**: Compreendi que, se eu executar a função ``calculadora()`` sem passar argumentos, o JavaScript tentará realizar operações matemáticas em valores ``undefined``, resultando em ``NaN``. Isso reforça a importância da passagem correta de parâmetros.
+
+### 2. Operadores Lógicos e Tabelas-Verdade
+
+Aprofundei-me na lógica booleana, que é o que permite ao software "tomar decisões". O foco foi entender como combinar estados ``true`` e ``false``:
+
+- **E Lógico (``&&``)**: A regra da exigência máxima. O resultado só é ``true`` se ambos os lados forem verdadeiros.
+
+- **OU Lógico (``||``)**: A regra da flexibilidade. O resultado é ``true`` se pelo menos um dos lados for verdadeiro.
+
+- **NÃO Lógico (``!``)**: O operador de inversão (negação). Ele inverte o estado booleano atual (o que é ``true`` vira ``false`` e vice-versa).
+
+- **Expressões Combinadas**: Desenvolvi expressões complexas como !(a && b) || a, exercitando a ordem de precedência lógica (primeiro o que está entre parênteses, depois a negação, e por fim os operadores binários).
+
+### 3. Operadores de Atribuição Composta (Sintaxe de Engenharia)
+
+Um dos pontos mais práticos do arquivo foi a transição da atribuição básica para a composta. Em vez de escrever códigos verbosos, utilizei atalhos que tornam o script mais limpo e profissional:
+
+- **Atribuição de Adição (``+=``) e Subtração (``-=``)**: Em vez de ``a = a + 5``, utilizei ``a += 5``. Entendi que isso não é apenas estética, mas um padrão de leitura rápida no dia a dia do desenvolvimento.
+
+- **Atribuição Multiplicativa e Divisiva (``*=``, ``/=``)**: Apliquei transformações diretas no valor armazenado na variável ``a2``.
+
+- **Atribuição de Resto e Potência (``%=``, ``**=``)**: Consolidei como atualizar uma variável aplicando o resto de uma divisão ou uma exponenciação nela mesma em uma única linha.
+
+### 4. Depuração e Saída de Dados
+
+- **Template Literals**: Usei a sintaxe de crases ``(`)`` e ``${}`` para interpolar variáveis e strings nos ``console.log``. Isso facilita imensamente a leitura dos resultados no terminal, permitindo ver a operação e o resultado lado a lado de forma clara.
+
+### Checkpoint de Evolução (Exclusivo .js):
+
+[x] Criar funções parametrizadas para cálculos matemáticos.
+[x] Diferenciar operadores de resto (``%``) e divisão (``/``).
+[x] Aplicar lógica booleana complexa com ``&&``, ``||`` e ``!``.
+[x] Dominar a precedência de sinais em expressões lógicas.
+[x] Substituir atribuições simples por operadores compostos (``+=``, ``*=``, etc.).
+[x] Identificar e evitar o estado ``NaN`` em execuções de funções.
+
+
+## Diário de Desenvolvimento
+
 **[23/01/2026] - Engenharia de Resiliência, Tratamento de Exceções e Interação com o SO**
 
 Nesta sessão, aprofundei a robustez do **Projeto layered-architecture-api** no ecossistema Java. O foco migrou da sintaxe básica para a construção de um sistema "à prova de falhas", integrando a lógica de negócios com a gestão de erros e a manipulação direta de processos do sistema operacional.
