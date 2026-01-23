@@ -1,5 +1,89 @@
 ## Diário de Desenvolvimento
 
+**[23/01/2026] - Engenharia de Resiliência, Tratamento de Exceções e Interação com o SO**
+
+Nesta sessão, aprofundei a robustez do **Projeto layered-architecture-api** no ecossistema Java. O foco migrou da sintaxe básica para a construção de um sistema "à prova de falhas", integrando a lógica de negócios com a gestão de erros e a manipulação direta de processos do sistema operacional.
+
+### 1. Controle de Fluxo e Loops Aninhados (Nested Loops)
+
+Aperfeiçoei a lógica de entrada de dados implementando uma estrutura de validação por camadas. Entendi que, em sistemas críticos, o programa não deve apenas detectar um erro, mas sim impedir o avanço do estado até que a integridade seja garantida.
+
+- **Estratégia de Validação**: Utilizei um laço ``while`` aninhado dentro de um ``for``. Enquanto o ``for`` gerencia a iteração sobre os índices do array (vagas do pátio), o ``while`` atua como um "porteiro" lógico, retendo o fluxo de execução até que o input satisfaça os critérios de segurança (pesos entre 2.000kg e 10.000kg).
+
+- **Uso de Flags**: Implementei variáveis booleanas (``trava``) para controle de estado, garantindo uma saída limpa do loop apenas após a validação completa.
+
+### 2. Resiliência via Tratamento de Exceções (Exception Handling)
+Diferente de linguagens de tipagem dinâmica, o Java exige uma postura proativa diante de falhas. Aprendi a implementar "escudos" no código:
+
+- **InputMismatchException**: Dominei o uso do bloco ``try-catch`` para capturar erros de tipagem. Se o sistema espera um ``double`` e recebe uma ``String``, o programa agora trata o erro em tempo de execução em vez de encerrar abruptamente (crash).
+
+- **Buffer Management**: Descobri a importância vital de limpar o buffer do ``Scanner``. Ao capturar uma exceção, o dado inválido permanece no "cano" de entrada; utilizei o método ``leitor.next()`` para descartar esse resíduo, evitando loops infinitos e garantindo que a próxima tentativa de leitura seja limpa.
+
+### 3. Abstração de Sistema Operacional e Processos
+
+Elevei o nível de interação do programa com o ambiente externo, saindo da "bolha" da JVM para o terminal real:
+
+- **ProcessBuilder**: Substituí o antigo ``Runtime.exec`` pela moderna classe ``ProcessBuilder``. Compreendi como configurar comandos nativos do SO, herdando a I/O do processo pai (``inheritIO``) e garantindo a sincronização através do método ``.waitFor()``, que pausa a execução do Java até que o comando do sistema (como a limpeza de tela) seja concluído.
+
+- **Portabilidade**: Apliquei ``System.getProperty("os.name")`` para criar um código agnóstico ao sistema, capaz de diferenciar comandos entre Windows (``cls``) e sistemas Unix/Linux (``clear``).
+
+### 4. Modularização e Refatoração Profissional
+
+Apliquei o princípio da **Responsabilidade Única (SRP)** para melhorar a legibilidade do main:
+
+- **Extração de Métodos Estáticos**: Isolei a lógica complexa de interação com o SO no método ``limparConsole()``, permitindo que a lógica de negócio principal permaneça limpa e focada.
+
+- **Otimização Aritmética**: Refatorei métodos de processamento de dados para retornos diretos, reduzindo o uso de variáveis temporárias e otimizando a pilha de execução.
+
+### Exemplo de Código Consolidado**
+
+````
+public static void limparConsole() {
+    try {
+        if (System.getProperty("os.name").contains("Windows")) {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } else {
+            new ProcessBuilder("clear").inheritIO().start().waitFor();
+        }
+    } catch (Exception e) {
+        System.out.println("Erro ao limpar console.");
+    }
+}
+
+public static void main(String[] args) {
+    while (!trava) {
+        try {
+            System.out.print("Qual o peso do caminhão? ");
+            double valor = leitor.nextDouble();
+            if (valor >= 2000 && valor <= 10000) {
+                pesos[i] = valor;
+                trava = true;
+            } else {
+                limparConsole();
+                System.out.println("Valor fora da faixa!");
+            }
+        } catch (InputMismatchException e) {
+            limparConsole();
+            System.out.println("Erro: Digite apenas números.");
+            leitor.next(); // Limpeza de buffer
+        }
+    }
+}
+````
+
+### Checkpoint de Evolução:
+
+[x] Implementar loops aninhados para validação persistente.
+[x] Dominar o bloco ``try-catch`` para capturar InputMismatchException.
+[x] Gerenciar o buffer do ``Scanner`` para evitar erros de fluxo.
+[x] Executar processos externos sincronizados via ``ProcessBuilder``.
+[x] Isolar lógica utilitária em métodos estáticos (``limparConsole``).
+
+**Próximo Passo**: Explorar a coleção dinâmica ArrayList para superar a limitação de tamanho fixo dos arrays convencionais.
+
+
+## Diário de Desenvolvimento
+
 **[22/01/2026] - Engenharia de Frontend, Escopo de Memória e Paradigmas Funcionais**
 
 Nesta etapa, dei os primeiros passos fundamentais na integração do ecossistema do **Projeto layered-architecture-api** com interfaces web modernas. O objetivo central foi entender como o navegador processa a lógica de comportamento e como organizar um projeto que escala do servidor para a tela do usuário.
