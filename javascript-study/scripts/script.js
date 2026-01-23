@@ -1,107 +1,101 @@
-// Definindo outra função regular com dois parâmetros
-function soma(a, b) {
-  return a + b;
+// calculadora
+
+// Função que simula a operação de uma calculadora
+function calculadora(num1, num2) {
+  // Operações aritméticas básicas
+  let adicao = num1 + num2;
+  let subtracao = num1 - num2;
+  let multiplicacao = num1 * num2;
+  let divisao = num1 / num2;
+  let modulo = num1 % num2;
+  let exponencial = num1 ** num2;
+
+  // Incremento e Decremento
+  // Vamos incrementar num1
+  let incrementar = num1;
+  incrementar++;
+
+  // Vamos decrementar num2
+  let decrementar = num2;
+  decrementar--;
+
+  // Exibindo os resultados no console
+  console.log(`Adição (${num1} + ${num2}) = ${adicao}`);
+  console.log(`Subtração (${num1} - ${num2}) = ${subtracao}`);
+  console.log(`Multiplicação (${num1} * ${num2}) = ${multiplicacao}`);
+  console.log(`Divisão (${num1} / ${num2}) = ${divisao}`);
+  console.log(`Módulo (${num1} % ${num2}) = ${modulo}`);
+  console.log(`Exponencial (${num1} ** ${num2}) = ${exponencial}`);
+  console.log(`Incrementar (${num1})++ = ${incrementar}`);
+  console.log(`Decrementar (${num2})-- = ${decrementar}`);
 }
 
-// Chamando a função soma e armazenando o resultado em uma variável
-let resultado = soma(13, 29);
+// Executando a função calculadora
+// calculadora();
+// NaN = Not a Number -> não é número
 
-// Exibindo o resultado da função soma
-console.log("O resultado da soma é: " + resultado);
+calculadora(10, 5);
 
-// Definindo uma função regular usando a palavra-chave 'function'
-function saudacao(nome) {
-  console.log("Olá " + nome);
-}
+// Exemplos de Operadores Lógicos em JavaScript
 
-// Chamando a função saudacao e passando um argumento
-saudacao("Ana teixeira");
+// Operador E lógico (&&)
+const a = true;
+const b = false;
 
-// Definindo uma função regular sem parâmetros e sem retorno
-function mensagem() {
-  console.log("Esta é uma mensagem de boass vindas");
-}
+const resultadoE1 = a && b; //false
+const resultadoE2 = a && true; //true
 
-// Chamando a função mensagem
-mensagem();
+console.log(`true && false: ${resultadoE1}`); // Saída: false
+console.log(`true && true: ${resultadoE2}`); // Saída: true
 
-// Declaração de uma variável chamada resultado e atribuição de uma função anônima a ela
+// Operador OU lógico (||)
+const resultadoOU1 = a || b; // true
+const resultadoOU2 = a || false;
 
-let somarParametros = function (parametro1, parametro2) {
-  console.log("Parâmetro 1: " + parametro1);
-  console.log("Parâmetro 2: " + parametro2);
+console.log(`true || false: ${resultadoOU1}`); // Saída: true
+console.log(`false || false: ${resultadoOU2}`);
 
-  let resultado = parametro1 + parametro2;
+// Operador NÃO lógico (!)
+const resultadoNao1 = !a;
+const resultadoNao2 = !b;
 
-  console.log("Resultado: " + resultado);
+console.log(`!true: ${resultadoNao1}`); // Saída: false
+console.log(`!false: ${resultadoNao2}`); // Saída: true
 
-  return resultado;
-};
+// Combinações de operadores lógicos
+const resultadoComb1 = (a || b) && !b;
+const resultadoComb2 = !(a && b) || a;
 
-// Chamada da função anônima através da variável
-let resultado2 = somarParametros(5, 10);
-console.log("Resultado da chamada da função somarParametros: " + resultado2);
+console.log(`(true || false) && !false: ${resultadoComb1}`); // Saída: true
+console.log(`!(true && false) || true: ${resultadoComb2}`); // Saída: true
 
-// Definindo uma função que aceita outra função como argumento
-function executarFuncao(funcao, valor1, valor2) {
-  console.log("\nExecutando a função passada como argumento: ");
-  return funcao(valor1, valor2);
-}
+// Exemplos de Operadores de Atribuição em JavaScript
 
-// Passando a função anônima como argumento para outra função
-let resultadoExecucao = executarFuncao(somarParametros, 7, 3);
-console.log(
-  "Resultado da execução da função passada como argumento: " +
-    resultadoExecucao,
-);
+// Operador de Atribuição Básico (=)
+let a2 = 10;
+console.log(`Valor inicial de a: ${a2}`);
 
-// Definindo e chamando uma função anônima imediatamente
-let resultadoImediato = (function (a, b) {
-  console.log("\nFunção de chamada imediata: ");
-  return a * b;
-})(4, 6);
-console.log(
-  "Resultado da função anônima chamada imediatamente: " + resultadoImediato,
-);
+// Operador de Atribuição de Adição (+=)
+a2 += 5; // equilavente a = a + 5
+console.log(`Após a += 5, valor de a: ${a2}`);
 
-// Arrow functions
+// Operador de Atribuição de Subtração (-=)
+a2 -= 3; // a = a - 3;
+console.log(`Após a -= 3, valor de a: ${a2}`);
 
-// Exemplo básico de uma arrow function que soma dois números
-let somar = (a, b) => {
-  return a + b;
-};
+// Operador de Atribuição de Multiplicação (*=)
+a2 *= 2; // a = a * 2;
+console.log(`Após a *= 2, valor de a: ${a2}`);
+// comparação e não atribuição: >=
 
-// Chamando a função e exibindo o resultado no console
-console.log(somar(5, 3));
+// Operador de Atribuição de Divisão (/=)
+a2 /= 4;
+console.log(`Após a /= 4, valor de a: ${a2}`);
 
-// Exemplo de arrow function com um único parâmetro (não precisa de parênteses)
-let dobrar = (n) => n * 2;
+// Operador de Atribuição de Resto (%=)
+a2 %= 4;
+console.log(`Após a %= 4, valor de a: ${a2}`);
 
-// Chamando a função e exibindo o resultado no console
-console.log(dobrar(5));
-
-// Exemplo de uma arrow function usada como callback
-let numeros = [1, 2, 3, 4, 5];
-
-// Usando arrow function com o método map para dobrar os valores do array
-let numerosDobrados = numeros.map((n) => n * 2);
-
-// Exibindo o array resultante no console
-console.log(numerosDobrados);
-
-// Arrow function com corpo de função mais complexo
-let saudacao = (nome, idade) => {
-  let mensagem = `Olá, meu nome é ${nome} e eu tenho ${idade} anos.`;
-  return mensagem;
-};
-
-// Chamando a função e exibindo o resultado no console
-console.log(saudacao("Ana", 25));
-
-let soma = (num1, num2) => {
-  return num1 + num2;
-};
-
-console.log(soma(2, 4));
-console.log(soma(3, 7));
-console.log(soma(1, 5));
+// Operador de Atribuição de Exponenciação (**=)
+a2 **= 3;
+console.log(`Após a **= 3, valor de a: ${a2}`);
