@@ -26,12 +26,12 @@ public class ExercicioGerenciador {
     }
 
     public static double calcularMedia(ArrayList<Double> pesos) {
-        if (pesos.isEmpty()) return 0.0; // Evita divisão por zero
+        if (pesos.isEmpty()) return 0.0;
         double soma = 0.0;
         for (double peso : pesos) {
             soma += peso;
         }
-        return soma / pesos.size(); // Use .size() diretamente, é mais limpo
+        return soma / pesos.size();
     }
 
     public static void main(String[] args) {
@@ -43,7 +43,7 @@ public class ExercicioGerenciador {
             System.out.println("\n--- MENU DE LOGÍSTICA ---");
             System.out.println("Opções: (adicionar) | (deletar) | (listar) | (media) | (sair)");
             System.out.print("Comando: ");
-            String esc = leitor.nextLine().trim().toLowerCase(); // .trim() remove espaços extras
+            String esc = leitor.nextLine().trim().toLowerCase();
 
             if (esc.equals("adicionar")) {
                 boolean conti = true;
@@ -53,7 +53,7 @@ public class ExercicioGerenciador {
                         try {
                             System.out.print("Peso do caminhão (2000-10000): ");
                             double valor = leitor.nextDouble();
-                            leitor.nextLine(); // LIMPA O BUFFER APÓS O DOUBLE
+                            leitor.nextLine();
 
                             if (valor < 2000 || valor > 10000) {
                                 System.out.println("Valor inválido.");
@@ -64,7 +64,7 @@ public class ExercicioGerenciador {
                             }
                         } catch (InputMismatchException e) {
                             System.out.println("Erro: Use apenas números!");
-                            leitor.nextLine(); // LIMPA O BUFFER NO ERRO
+                            leitor.nextLine();
                         }
                     }
                     System.out.print("Adicionar outro? (s/n): ");
@@ -78,7 +78,7 @@ public class ExercicioGerenciador {
                 } else {
                     System.out.print("Qual o índice (0 a " + (listaDePesos.size()-1) + ")? ");
                     int n = leitor.nextInt();
-                    leitor.nextLine(); // LIMPA O BUFFER
+                    leitor.nextLine();
                     if (n >= 0 && n < listaDePesos.size()) {
                         listaDePesos.remove(n);
                         System.out.println("🗑️ Removido!");
@@ -107,4 +107,3 @@ public class ExercicioGerenciador {
         leitor.close();
     }
 }
-
