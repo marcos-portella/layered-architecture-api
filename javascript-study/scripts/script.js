@@ -1,101 +1,137 @@
-// calculadora
+// Variável que representa a previsão do tempo
+// Pode ser "rainy" (chuvoso), "sunny" (ensolarado) ou "cloudy" (nublado)
 
-// Função que simula a operação de uma calculadora
-function calculadora(num1, num2) {
-  // Operações aritméticas básicas
-  let adicao = num1 + num2;
-  let subtracao = num1 - num2;
-  let multiplicacao = num1 * num2;
-  let divisao = num1 / num2;
-  let modulo = num1 % num2;
-  let exponencial = num1 ** num2;
+let weatherForecast = "sunny";
 
-  // Incremento e Decremento
-  // Vamos incrementar num1
-  let incrementar = num1;
-  incrementar++;
+// Analogia com a vida real: Decidindo se devemos levar um guarda-chuva
+// Vamos adicionar uma condição extra para cobrir outro cenário
 
-  // Vamos decrementar num2
-  let decrementar = num2;
-  decrementar--;
-
-  // Exibindo os resultados no console
-  console.log(`Adição (${num1} + ${num2}) = ${adicao}`);
-  console.log(`Subtração (${num1} - ${num2}) = ${subtracao}`);
-  console.log(`Multiplicação (${num1} * ${num2}) = ${multiplicacao}`);
-  console.log(`Divisão (${num1} / ${num2}) = ${divisao}`);
-  console.log(`Módulo (${num1} % ${num2}) = ${modulo}`);
-  console.log(`Exponencial (${num1} ** ${num2}) = ${exponencial}`);
-  console.log(`Incrementar (${num1})++ = ${incrementar}`);
-  console.log(`Decrementar (${num2})-- = ${decrementar}`);
+if (weatherForecast === "rainy") {
+  // se
+  console.log("devemos levar um guarda-chuva");
+} else if (weatherForecast === "cloudy") {
+  // senão se
+  console.log("devemos levar um guarda-chuva, só por segurança");
+} else {
+  // senão
+  console.log("NÃO devemos levar um guarda-chuva");
 }
 
-// Executando a função calculadora
-// calculadora();
-// NaN = Not a Number -> não é número
+// Função que recebe a cor do semáforo e decide a ação do pedestre
+function checkTrafficLight(lightColor) {
+  switch (lightColor) {
+    case "verde":
+      console.log("Pode atravessar a rua.");
+      break;
+    case "amarelo":
+      console.log("Prepare-se para parar.");
+      break;
+    case "vermelho":
+      console.log("Pare! Não atravesse a rua.");
+      break;
+    default:
+      console.log(
+        "Cor inválida! Aguarde até que o semáforo",
+        "esteja em uma cor válida.",
+      );
+  }
+}
 
-calculadora(10, 5);
+// Exemplos de uso
+checkTrafficLight("verde");
+//checkTrafficLight('amarelo');
+//checkTrafficLight('vermelho');
+//checkTrafficLight('azul');
 
-// Exemplos de Operadores Lógicos em JavaScript
+// Imagine que você é um entregador de pizzas em uma cidade com várias ruas numeradas de 1 a 10.
+// Você tem que entregar uma pizza em cada rua, começando da rua 1 até a rua 10.
 
-// Operador E lógico (&&)
-const a = true;
-const b = false;
+// Aqui, usaremos um loop for para simular esse processo:
 
-const resultadoE1 = a && b; //false
-const resultadoE2 = a && true; //true
+for (let rua = 1; rua <=10; rua++) {
+    console.log("Entrega feita na rua: ", rua);
+}
 
-console.log(`true && false: ${resultadoE1}`); // Saída: false
-console.log(`true && true: ${resultadoE2}`); // Saída: true
+// Imagine que você está fazendo exercícios físicos para se manter saudável.
+// Você decide fazer flexões até ficar cansado.
 
-// Operador OU lógico (||)
-const resultadoOU1 = a || b; // true
-const resultadoOU2 = a || false;
+// Aqui, usaremos um loop while para simular esse processo:
 
-console.log(`true || false: ${resultadoOU1}`); // Saída: true
-console.log(`false || false: ${resultadoOU2}`);
+let quantidadeFlexoes = 0;
+let cansaco = false;
 
-// Operador NÃO lógico (!)
-const resultadoNao1 = !a;
-const resultadoNao2 = !b;
+while (!cansaco) {
+    quantidadeFlexoes++;
+    console.log("eu fiz ", quantidadeFlexoes, "flexoes!");
 
-console.log(`!true: ${resultadoNao1}`); // Saída: false
-console.log(`!false: ${resultadoNao2}`); // Saída: true
+    if (quantidadeFlexoes === 10) {
+        cansaco = true;
+    }
+}
 
-// Combinações de operadores lógicos
-const resultadoComb1 = (a || b) && !b;
-const resultadoComb2 = !(a && b) || a;
+// Imagine que você está tentando aprender a andar de bicicleta.
+// Você decide praticar até conseguir andar por pelo menos 1 minuto sem cair.
 
-console.log(`(true || false) && !false: ${resultadoComb1}`); // Saída: true
-console.log(`!(true && false) || true: ${resultadoComb2}`); // Saída: true
+// Aqui, usaremos um loop do...while para simular esse processo:
 
-// Exemplos de Operadores de Atribuição em JavaScript
+let tempoDeAndar = 0;
+let caiu = false;
 
-// Operador de Atribuição Básico (=)
-let a2 = 10;
-console.log(`Valor inicial de a: ${a2}`);
+do {
+    tempoDeAndar++;
+    console.log("andei de bicicleta por ", tempoDeAndar, "minutos...");
 
-// Operador de Atribuição de Adição (+=)
-a2 += 5; // equilavente a = a + 5
-console.log(`Após a += 5, valor de a: ${a2}`);
+    if (tempoDeAndar === 8) {
+        caiu = true;
+    }
 
-// Operador de Atribuição de Subtração (-=)
-a2 -= 3; // a = a - 3;
-console.log(`Após a -= 3, valor de a: ${a2}`);
+} while (!caiu && tempoDeAndar < 10);
 
-// Operador de Atribuição de Multiplicação (*=)
-a2 *= 2; // a = a * 2;
-console.log(`Após a *= 2, valor de a: ${a2}`);
-// comparação e não atribuição: >=
 
-// Operador de Atribuição de Divisão (/=)
-a2 /= 4;
-console.log(`Após a /= 4, valor de a: ${a2}`);
+// Imagine que você está organizando uma festa de aniversário.
+// Os blocos de código são como diferentes áreas da festa, onde diferentes atividades acontecem.
+// Por exemplo, você pode ter uma área para dançar, uma área para jogos e uma área para comer.
 
-// Operador de Atribuição de Resto (%=)
-a2 %= 4;
-console.log(`Após a %= 4, valor de a: ${a2}`);
+{
+    // Área para dançar
+    console.log("Hora de dançar!");
+    // Aqui vão as instruções para a pista de dança
+}
 
-// Operador de Atribuição de Exponenciação (**=)
-a2 **= 3;
-console.log(`Após a **= 3, valor de a: ${a2}`);
+{
+    // Área para jogos
+    console.log("Vamos jogar!");
+    // Aqui vão as instruções para os jogos
+}
+
+{
+    // Área para comer
+    console.log("Hora de comer!");
+    // Aqui vão as instruções para o buffet
+}
+
+// Os rótulos são como etiquetas que você coloca em diferentes atividades durante a festa, para identificá-las.
+
+// Imagine que você tem uma competição de dança e uma competição de jogos acontecendo ao mesmo tempo.
+
+danca:
+for (let i = 0; i < 3; i++) {
+    jogos:
+    for (let j = 0; j < 3; j++) {
+        if (i === 1 && j === 1) {
+            console.log("A competição de dança foi interrompida!"); // Sai da competição de dança
+            break danca;
+        }
+        console.log("Competidor " + (i+1) + " está dançando enquanto o competidor " + (j+1) + " está jogando.");
+    }
+}
+
+/*
+    O código simula uma situação em que há uma competição de dança e uma competição de jogos acontecendo simultaneamente.
+    Os loops for aninhados representam as duas competições,
+    onde cada competidor está envolvido tanto na dança quanto nos jogos.
+    Quando uma condição específica é atendida (no caso, i === 1 && j === 1),
+    a competição de dança é interrompida e uma mensagem é exibida,
+    utilizando o rótulo danca para sair do loop da competição de dança.
+    Isso demonstra o uso dos rótulos para controlar o fluxo do código em situações específicas.
+ */

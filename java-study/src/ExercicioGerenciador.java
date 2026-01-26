@@ -1,17 +1,7 @@
-// Regras de Negócio:
-
-// O peso permitido é entre 2.000kg e 10.000kg.
-
-// Se o usuário digitar um peso inválido, o programa deve exibir uma mensagem 
-// de erro: "Peso inválido! O caminhão deve ter entre 2000kg e 10000kg.".
-
-// O pulo do gato: O programa não deve avançar para o próximo caminhão enquanto 
-// o peso atual não for válido. (Dica: você vai precisar de um loop dentro do 
-// outro ou de uma lógica de repetição específica).
-
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ExercicioGerenciador {
     public static void limparConsole(){
@@ -34,64 +24,87 @@ public class ExercicioGerenciador {
             System.out.println("Erro ao limpar o console: " + e.getMessage());
         }
     }
-    
-    public static double calcularMedia(double[] pesos) {
+
+    public static double calcularMedia(ArrayList<Double> pesos) {
+        if (pesos.isEmpty()) return 0.0; // Evita divisão por zero
         double soma = 0.0;
         for (double peso : pesos) {
             soma += peso;
         }
-        return soma / pesos.length;
+        return soma / pesos.size(); // Use .size() diretamente, é mais limpo
     }
-    
+
     public static void main(String[] args) {
-
-        double[] pesos = new double[4];
+        ArrayList<Double> listaDePesos = new ArrayList<>();
         Scanner leitor = new Scanner(System.in);
+        boolean sim = true;
 
-        for (int i = 0; i < pesos.length; i++) {
-            boolean trava = false;
-            while(!trava) {
-                try {
-                    System.out.println("Valores válidos: 2000 á 10000.");
-                    System.out.print("Qual o peso do caminhão? ");
-                    double valor = leitor.nextDouble();
-                    
-                    if (valor < 2000 || valor > 10000) {
-                        limparConsole();
-                        System.out.println("Valor não válido.");
-                    } else {
-                        limparConsole();
-                        pesos[i] = valor;
-                        System.out.println("Peso válido!");
-                        trava = true;
-                        System.out.println(
-                            "Vagas disponíveis: " + (pesos.length - (i + 1))
-                        );
+        while(sim) {
+            System.out.println("\n--- MENU DE LOGÍSTICA ---");
+            System.out.println("Opções: (adicionar) | (deletar) | (listar) | (media) | (sair)");
+            System.out.print("Comando: ");
+            String esc = leitor.nextLine().trim().toLowerCase(); // .trim() remove espaços extras
+
+            if (esc.equals("adicionar")) {
+                boolean conti = true;
+                while (conti) {
+                    boolean trava = false;
+                    while (!trava) {
+                        try {
+                            System.out.print("Peso do caminhão (2000-10000): ");
+                            double valor = leitor.nextDouble();
+                            leitor.nextLine(); // LIMPA O BUFFER APÓS O DOUBLE
+
+                            if (valor < 2000 || valor > 10000) {
+                                System.out.println("Valor inválido.");
+                            } else {
+                                listaDePesos.add(valor);
+                                System.out.println("✅ Adicionado!");
+                                trava = true;
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Erro: Use apenas números!");
+                            leitor.nextLine(); // LIMPA O BUFFER NO ERRO
+                        }
                     }
-                }catch (InputMismatchException e) {
-                    limparConsole();
-                    System.out.println(
-                        "Erro: Você deve digitar apenas números!"
-                    );
-                    leitor.next();
+                    System.out.print("Adicionar outro? (s/n): ");
+                    String resposta = leitor.nextLine();
+                    if (resposta.equalsIgnoreCase("n")) conti = false;
                 }
+            } 
+            else if (esc.equals("deletar")) {
+                if (listaDePesos.isEmpty()) {
+                    System.out.println("Lista vazia!");
+                } else {
+                    System.out.print("Qual o índice (0 a " + (listaDePesos.size()-1) + ")? ");
+                    int n = leitor.nextInt();
+                    leitor.nextLine(); // LIMPA O BUFFER
+                    if (n >= 0 && n < listaDePesos.size()) {
+                        listaDePesos.remove(n);
+                        System.out.println("🗑️ Removido!");
+                    } else {
+                        System.out.println("Índice inexistente.");
+                    }
+                }
+            } 
+            else if (esc.equals("listar")) {
+                limparConsole();
+                for (int i = 0; i < listaDePesos.size(); i++) {
+                    System.out.println("Vaga " + i + ": " + listaDePesos.get(i) + "kg");
+                }
+            } 
+            else if (esc.equals("media")) {
+                System.out.println("Média: " + calcularMedia(listaDePesos) + "kg");
+            } 
+            else if (esc.equals("sair")) {
+                sim = false;
+            } 
+            else {
+                System.out.println("Comando inválido.");
             }
         }
-
-        int i = 1;
-        limparConsole();
-
-        for (double peso : pesos) {
-
-            System.out.println(
-                "O peso do caminhão no °" + i + " espaço é: " + peso
-            );
-
-            i += 1;
-        }
-
-        double resultado = calcularMedia(pesos);
-        System.out.print("A media do peso dos caminhões é: " + resultado);
+        System.out.println("Programa encerrado.");
         leitor.close();
     }
 }
+
