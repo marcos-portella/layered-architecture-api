@@ -1,126 +1,86 @@
-// Exemplo de uso do método slice()
-// Temos uma string com várias frutas
-let frutas = "maçã, banana, laranja, uva, abacaxi";
-console.log("Frutas:", frutas);
-console.log("Tamanho da string frutas: ", frutas.length);
+// exemplosArray.js
 
-// Queremos obter uma parte da string, por exemplo, apenas "banana, laranja"
-let parteFrutas = frutas.slice(5, 21);
-console.log("Resultado do slice(): ", parteFrutas);
+// Criar um Array
+let array1 = [];
+let array2 = new Array();
+let array3 = ["maçã", "banana", "uva"];
 
-// Exemplo de uso do método trim()
-// Temos uma string com espaços em branco no início e no final
-let frutaComEspaco = "            abacate           ";
+console.log("Array 1", array1);
+console.log("Array 2", array2);
+console.log("Array 3", array3);
 
-// Queremos remover os espaços em branco do início e do final da string
-let frutaSemEspaco = frutaComEspaco.trim();
-console.log("Resultado do trim():", frutaSemEspaco);
+// Adicionando elementos ao array
+//array1 = ["teste"];
+//array2 = ["teste2"];
+//array3 = ["teste3"];
 
-// Exemplo de uso do método split()
-// Temos uma string com várias frutas separadas por vírgulas
-let listaDeFrutas = "maçã,banana,laranja,uva,abacaxi";
+console.log("\nArray após adicionar elementos:", array1);
+array1.push("el1");
+array2.push("el2");
+array3.push("el3");
 
-// Queremos dividir a string em um array de substrings, usando a vírgula como separador
-let arrayDeFrutas = listaDeFrutas.split(",");
-console.log("Resultado do split()", arrayDeFrutas);
+console.log("\nNovo Array 1", array1);
+console.log("Novo Array 2", array2);
+console.log("Novo Array 3", array3);
 
-// Testando cada fruta separadamente
-// usando um método avançado: for each
+// Acessar elementos de um array
+let primeiroElemento = array1[0];
+let erro = array1[1];
+let segundoElemento = array2[0];
+let terceiroElemento = array3[3];
 
-arrayDeFrutas.forEach((fruta, index) => {
-  console.log(`Fruta ${index + 1}: ${fruta.trim()}`); // Usa trim() para garantir que não há espaços em cada elemento
-});
+console.log("\nPrimeiro elemento:", primeiroElemento);
+console.log("Erro:", erro);
+console.log("Segundo elemento:", segundoElemento);
+console.log("Terceira elemento:", terceiroElemento);
 
-// Criação de strings com nomes de animais
-let animal1 = "Elefante";
-let animal2 = "Girafa";
-let animal3 = "Zebra";
+// Modificar elementos de um array
+array1[0] = "novo elemento";
+console.log("\nArray após modificar elementos:", array1);
 
-// Exemplo do método substring()
-// Pega parte da string 'Elefante', começando no índice 3 até o índice 7
-let parteAnimal1 = animal1.substring(3, 7);
-console.log("Resultado substring()", parteAnimal1);
+// Criando um array inicial
+let frutas = ["maçã", "banana", "laranja", "uva"]; // pos: 0 .. 3
 
-// Exemplo do método replace()
-// Substitui a substring 'ra' por 're' em 'Girafa'
-let novoAnimal2 = animal2.replace("ra", "re");
-console.log("Resultado replace()", novoAnimal2);
+console.log("Array inicial: " + frutas);
+console.log("Comprimento do array: " + frutas.length);
 
-// Exemplo do método concat()
-// Concatena as strings 'Elefante', 'Girafa' e 'Zebra' com espaços entre elas
-let animaisJuntos = animal1.concat(" ", animal2, " ", animal3);
-console.log("Resultado concat()", animaisJuntos);
+// Usando o método push() para adicionar elementos ao final do array
+let novoComprimento = frutas.push("manga", "abacate");
+console.log("\nArray atualizado push: " + frutas);
+console.log("Novo comprimento do array: " + novoComprimento);
 
-// Código json
-const jsonObject = { name: "John", age: 30, city: "New York" };
-console.log(jsonObject)
+// Usando o método pop() para remover o último elemento do array
+let ultimaFruta = frutas.pop();
+console.log("\nArray atualizado pop: " + frutas);
+console.log("Última fruta removida: " + ultimaFruta);
 
-// Exemplo: Manipulação de Dados JSON
+// Usando o método shift() para remover o primeiro elemento do array
+let primeiraFruta = frutas.shift();
+console.log("\nArray atualizado shift: " + frutas);
+console.log("Primeira fruta removida: " + primeiraFruta);
 
-// Objeto JSON inicial
-let pessoa = {
-    "nome": "João",
-    "idade": 30,
-    "endereco": {
-        "rua": "Rua Principal",
-        "numero": 123
-    },
-    "telefones": ["1234-5678", "8765-4321"]
-};
+// Métodos Avançados de Array
 
-console.log(pessoa);
+let array11 = [3, 4, 5]; // 0, 1 , 2
+let array22 = [6, 7, 8]; // 0, 1 , 2
 
-// Acessar Dados
-console.log("\nAcessar Dados:");
-console.log(pessoa.nome);
-console.log(pessoa["idade"]);
-console.log(pessoa.endereco.rua);
-console.log(pessoa["telefones"][0]);
-console.log(pessoa["telefones"][1]);
+console.log("Array original:", array11);
 
-// Adicionar Dados
-console.log("\nAdicionar Dados:");
-pessoa.email = "joao@example.com";
-console.log(pessoa);
+// Método unshift(): adiciona um ou mais elementos ao início do array
+array11.unshift(1, 2);
+console.log("\nApós unshift(1, 2):", array11);
 
-// Modificar Dados
-console.log("\nModificar Dados:");
-pessoa.idade = 31;
-pessoa.endereco.rua = "Rua Secundária";
-console.log(pessoa);
+// Método concat(): retorna um novo array resultante da concatenação de dois ou mais arrays
+let array33 = array11.concat(array22);
+console.log("\nArray concatenado:", array33);
 
-// Remover Dados
-console.log("\nRemover Dados:");
-delete pessoa.telefones;
+// Método splice(): altera o conteúdo de um array removendo, substituindo ou adicionando elementos
+array33.splice(5, 2, 'a', 'b');
+console.log("\nApós splice(5, 2, 'a', 'b'):", array33);
 
-// Existência da Propriedade: Se a propriedade não existir no objeto,
-// o operador delete não causará um erro, apenas não fará nada.
-// O operador delete não pode ser usado para remover variáveis declaradas com var, let ou const
-// Ele só funciona para propriedades de objetos.
+// Método slice(): retorna uma cópia superficial de uma parte do array em um novo array
+let array44 = array33.slice(3,6);
+console.log("\nApós slice(3, 6):", array44);
 
-console.log(pessoa);
-
-// Operações com Arrays
-console.log("\nOperações com Arrays:");
-pessoa.hobbies = ["leitura", "esportes"];
-console.log(pessoa.hobbies[1]);
-pessoa.hobbies.push("viagens");
-console.log(pessoa.hobbies);
-
-// Iterar sobre as Propriedades do Objeto
-console.log("\nIterar sobre as Propriedades do Objeto:");
-
-// for...in não deve ser usado para iterar sobre arrays se a ordem dos elementos for importante
-// pois a ordem de iteração não é garantida.
-for (let chave in pessoa) {
-    console.log(chave + ": " + pessoa[chave]);
-}
-
-// Converter de e para JSON
-console.log("\nConverter de e para JSON:");
-let jsonTexto = JSON.stringify(pessoa);
-
-console.log(jsonTexto);
-
-let objetoPessoa = JSON.parse(jsonTexto);
-console.log(objetoPessoa);
+// Mostrar o array3 original após todas as operações
+console.log("\nArray3 original após todas as operações:", array33);
