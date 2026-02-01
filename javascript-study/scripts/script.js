@@ -1,86 +1,183 @@
-// exemplosArray.js
+// Definição da classe "Casa"
 
-// Criar um Array
-let array1 = [];
-let array2 = new Array();
-let array3 = ["maçã", "banana", "uva"];
+class Casa {
 
-console.log("Array 1", array1);
-console.log("Array 2", array2);
-console.log("Array 3", array3);
+    // Construtor define as propriedades da classe
+    constructor (cor, numQuarto, temGaragem) {
+        this.cor = cor;
+        this.numQuarto = numQuarto;
+        this.temGaragem = temGaragem;
+    }
+    
+    // Método para descrever a casa
+    descrever() {
+        let descricao = `Esta casa é de cor ${this.cor}, tem ${this.numQuarto} quarto(s)...`;
+        if (this.temGaragem) {
+            descricao += ` e tem uma garagem.`;
+        } else {
+            descricao += ` e não tem garagem.`;
+        }
+        return descricao;
+    }
 
-// Adicionando elementos ao array
-//array1 = ["teste"];
-//array2 = ["teste2"];
-//array3 = ["teste3"];
+}
 
-console.log("\nArray após adicionar elementos:", array1);
-array1.push("el1");
-array2.push("el2");
-array3.push("el3");
+// Criação de objetos (instâncias da classe Casa)
+const minhaCasa = new Casa("verde", 3, true);
+const suaCasa = new Casa("roxa", 2, false);
 
-console.log("\nNovo Array 1", array1);
-console.log("Novo Array 2", array2);
-console.log("Novo Array 3", array3);
+// Manipulação dos objetos e exibição das descrições
+console.log(minhaCasa.descrever());
+console.log(suaCasa.descrever());
 
-// Acessar elementos de um array
-let primeiroElemento = array1[0];
-let erro = array1[1];
-let segundoElemento = array2[0];
-let terceiroElemento = array3[3];
+// Classe BASE "Casa"
 
-console.log("\nPrimeiro elemento:", primeiroElemento);
-console.log("Erro:", erro);
-console.log("Segundo elemento:", segundoElemento);
-console.log("Terceira elemento:", terceiroElemento);
+class Casa2 {
+    constructor(cor, numQuarto, temGaragem) {
+        // Propriedades privadas utilizando convenção de underscore
+        this._cor = cor;
+        this._numQuarto = numQuarto;
+        this._temGaragem = temGaragem;
+    }
 
-// Modificar elementos de um array
-array1[0] = "novo elemento";
-console.log("\nArray após modificar elementos:", array1);
+    // Métodos getters e setters para acessar e modificar as propriedades
+    get cor() {
+        return this._cor;
+    }
 
-// Criando um array inicial
-let frutas = ["maçã", "banana", "laranja", "uva"]; // pos: 0 .. 3
+    set cor(novaCor) {
+        this._cor = novaCor;
+    }
 
-console.log("Array inicial: " + frutas);
-console.log("Comprimento do array: " + frutas.length);
+    get numQuarto() {
+        return this._numQuarto;
+    }
 
-// Usando o método push() para adicionar elementos ao final do array
-let novoComprimento = frutas.push("manga", "abacate");
-console.log("\nArray atualizado push: " + frutas);
-console.log("Novo comprimento do array: " + novoComprimento);
+    set numQuarto(novoNumQuarto) {
+        this._numQuarto = novoNumQuarto;
+    }
 
-// Usando o método pop() para remover o último elemento do array
-let ultimaFruta = frutas.pop();
-console.log("\nArray atualizado pop: " + frutas);
-console.log("Última fruta removida: " + ultimaFruta);
+    get temGaragem() {
+        return this._temGaragem;
+    }
 
-// Usando o método shift() para remover o primeiro elemento do array
-let primeiraFruta = frutas.shift();
-console.log("\nArray atualizado shift: " + frutas);
-console.log("Primeira fruta removida: " + primeiraFruta);
+    set temGaragem(novoTemGaragem) {
+        this._temGaragem = novoTemGaragem;
+    }
 
-// Métodos Avançados de Array
+    // Método para descrever a casa
+    descrever() {
+        let descricao = `Esta casa é de cor ${this._cor}, tem ${this._numQuarto} quartos`;
+        if (this._temGaragem) {
+            descricao += " e tem uma garagem.";
+        } else {
+            descricao += " e não tem garagem.";
+        }
+        return descricao;
+    }
+}
 
-let array11 = [3, 4, 5]; // 0, 1 , 2
-let array22 = [6, 7, 8]; // 0, 1 , 2
+// Classe DERIVADA "CasaLuxuosa" que HERDA de "Casa"
+class CasaLuxuosa extends Casa2 {
+    constructor(cor, numeroDeQuartos, temGaragem, temPiscina) {
+        // Chama o construtor da classe base
+        super(cor, numeroDeQuartos, temGaragem);
+        // Propriedade adicional específica da classe derivada
+        this._temPiscina = temPiscina;
+    }
 
-console.log("Array original:", array11);
+    // Getter e setter para a nova propriedade
+    get temPiscina() {
+        return this._temPiscina;
+    }
 
-// Método unshift(): adiciona um ou mais elementos ao início do array
-array11.unshift(1, 2);
-console.log("\nApós unshift(1, 2):", array11);
+    set temPiscina(novoTemPiscina) {
+        this._temPiscina = novoTemPiscina;
+    }
 
-// Método concat(): retorna um novo array resultante da concatenação de dois ou mais arrays
-let array33 = array11.concat(array22);
-console.log("\nArray concatenado:", array33);
+    // Sobrescrita do método descrever para incluir a piscina
+    descrever() {
+        let descricao = super.descrever(); // Chama o método descrever da classe base
+        if (this._temPiscina) {
+            descricao += " Também tem uma piscina.";
+        } else {
+            descricao += " Não tem piscina.";
+        }
+        return descricao;
+    }
+}
 
-// Método splice(): altera o conteúdo de um array removendo, substituindo ou adicionando elementos
-array33.splice(5, 2, 'a', 'b');
-console.log("\nApós splice(5, 2, 'a', 'b'):", array33);
+// Criação de objetos (instâncias das classes)
+const minhaCasa2 = new Casa2("azul", 3, true);
+const casaLuxuosa = new CasaLuxuosa("branca", 5, true, true);
 
-// Método slice(): retorna uma cópia superficial de uma parte do array em um novo array
-let array44 = array33.slice(3,6);
-console.log("\nApós slice(3, 6):", array44);
+// Manipulação dos objetos e exibição das descrições
+console.log(minhaCasa2.descrever());
+console.log(casaLuxuosa.descrever());
 
-// Mostrar o array3 original após todas as operações
-console.log("\nArray3 original após todas as operações:", array33);
+// Classe base "Imovel"
+class Imovel {
+    constructor(endereco, tamanho) {
+        this.endereco = endereco;
+        this.tamanho = tamanho;
+    }
+
+    // Método abstrato para descrever o imóvel (deve ser implementado nas subclasses)
+    descrever() {
+        throw new Error("Este método deve ser implementado por subclasses");
+    }
+}
+
+// Classe derivada "Casa" que herda de "Imovel"
+class Casa3 extends Imovel {
+    constructor(endereco, tamanho, cor, numeroDeQuartos, temGaragem) {
+        super(endereco, tamanho);
+        this.cor = cor;
+        this.numeroDeQuartos = numeroDeQuartos;
+        this.temGaragem = temGaragem;
+    }
+
+    // Implementação do método descrever
+    descrever() {
+        let descricao = `Casa localizada em ${this.endereco},
+         de cor ${this.cor}, com ${this.numeroDeQuartos} quartos, de tamanho ${this.tamanho}m²`;
+        
+         // operador ternário
+         descricao += this.temGaragem ? " e possui garagem." : " e não possui garagem.";
+
+        return descricao;
+    }
+}
+
+// Classe derivada "Apartamento" que herda de "Imovel"
+class Apartamento extends Imovel {
+    constructor(endereco, tamanho, numeroDoAndar, possuiElevador) {
+        super(endereco, tamanho);
+        this.numeroDoAndar = numeroDoAndar;
+        this.possuiElevador = possuiElevador;
+    }
+
+    // Implementação do método descrever
+    descrever() {
+        let descricao = `Apartamento localizado em ${this.endereco},
+         no ${this.numeroDoAndar}º andar, de tamanho ${this.tamanho}m²`;
+        
+         descricao += this.possuiElevador ? " e possui elevador." : " e não possui elevador.";
+        
+         return descricao;
+    }
+}
+
+// Função para descrever um imóvel (polimorfismo)
+function descreverImovel(imovel) {
+    console.log(imovel.descrever());
+}
+
+// Criação de objetos (instâncias das classes)
+const minhaCasa3 = new Casa3("Rua A, 123", 120, "azul", 3, true);
+const meuApartamento = new Apartamento("Avenida B, 456", 85, 7, true);
+
+// Manipulação dos objetos e exibição das descrições usando polimorfismo
+descreverImovel(minhaCasa3);
+descreverImovel(meuApartamento);
+
