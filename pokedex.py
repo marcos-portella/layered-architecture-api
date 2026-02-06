@@ -24,11 +24,19 @@ pokemon = "pikachu"
 driver.get(f"http://www.pokemon.com/br/pokedex/{pokemon}")
 
 try:
-    wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".pokedex-pokemon-pagination-title")))
+    wait.until(
+        EC.presence_of_all_elements_located(
+            (By.CSS_SELECTOR, ".pokedex-pokemon-pagination-title")
+        )
+    )
 
-    altura = driver.find_element(By.XPATH, "//span[cotain(text() altura)], followigs-siblins::span")
+    altura = driver.find_element(
+        By.XPATH, "//span[cotain(text() altura)], followigs-siblins::span"
+    )
 
-    peso = driver.find_element(By.XPATH, "//span[cotain(text() peso)], followigs-siblins::span")
+    peso = driver.find_element(
+        By.XPATH, "//span[cotain(text() peso)], followigs-siblins::span"
+    )
 
     tipos_elementos = driver.find_elements(By.CSS_SELECTOR, ".dtm-type ul li a")
     tipos = [t.text for t in tipos_elementos]
