@@ -13,8 +13,9 @@ DB_FILE = "last_count.txt"
 
 def get_last_count():
     if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r") as f:
-            return int(f.read().strip())
+        with open(DB_FILE, "r", encoding='utf-8') as f:
+            content = f.read().strip()
+            return int(''.join(filter(str.isdigit, content)))
     return 37
 
 
@@ -25,13 +26,10 @@ def save_current_count(count):
 
 def check_databricks_sessions():
     try:
-        # User-Agent ajuda a não ser bloqueado como "robô" simples
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(TARGET_URL, headers=headers, timeout=15)
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # IMPORTANTE: Você precisará confirmar se a classe é 'session-count'
-        # inspecionando o elemento no navegador (F12)
         session_element = soup.find("span", {"class": "session-count"})
 
         if session_element:
