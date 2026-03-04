@@ -41,10 +41,9 @@ def check_databricks_sessions():
             if match:
                 return int(match.group(1))
 
-        return 37
+        return None
     except Exception as e:
         print(f"Erro na extração: {e}")
-        return 38  # Linha temporária para teste
         return None
 
 
