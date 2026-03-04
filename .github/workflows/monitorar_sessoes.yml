@@ -27,3 +27,12 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python selenium2.py
+
+      - name: Salvar progresso (Commit and Push)
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add last_count.txt
+          # O '|| exit 0' serve para não dar erro se não houver mudança no arquivo
+          git commit -m "chore: update session count [skip ci]" || exit 0
+          git push
