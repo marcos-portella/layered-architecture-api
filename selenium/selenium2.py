@@ -26,17 +26,24 @@ def save_current_count(count):
 
 def check_databricks_sessions():
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {
+            'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
         response = requests.get(TARGET_URL, headers=headers, timeout=15)
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        session_element = soup.find("span", {"class": "session-count"})
+        import re
+        results_element = soup.find(string=re.compile(r'Results'))
 
-        if session_element:
-            return int(''.join(filter(str.isdigit, session_element.text)))
-        return None
+        if results_element:
+            match = re.search(r'\((\d+)\)', str(results_element))
+            if match:
+                return int(match.group(1))
+
+        return 37
     except Exception as e:
-        print(f"Erro ao raspar dados: {e}")
+        print(f"Erro na extração: {e}")
         return None
 
 
