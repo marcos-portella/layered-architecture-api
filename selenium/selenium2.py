@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+CHAT_ID = os.getenv('CHAT_ID')
 TARGET_URL = "https://www.databricks.com/dataaisummit/agenda"
 DB_FILE = "last_count.txt"
 
@@ -41,16 +41,18 @@ def check_databricks_sessions():
             if match:
                 return int(match.group(1))
 
-        return 37
+        return 38
     except Exception as e:
         print(f"Erro na extração: {e}")
-        return 37
+        return 38
 
 
 def send_notification(count):
-    message = f"O número de sessões aumentou para: {count}"
+    message = "O número de sessões aumentou para: {count}"
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    requests.post(url, data={"chat_id": CHAT_ID, "text": message})
+
+    response = requests.post(url, json={"chat_id": CHAT_ID, "text": message})
+    print(f"Resposta do Telegram: {response.status_code} - {response.text}")
 
 
 last_known = get_last_count()
