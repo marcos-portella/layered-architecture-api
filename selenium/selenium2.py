@@ -16,7 +16,7 @@ def get_last_count():
         with open(DB_FILE, "r", encoding='utf-8') as f:
             content = f.read().strip()
             return int(''.join(filter(str.isdigit, content)))
-    return 37
+    return 0
 
 
 def save_current_count(count):
