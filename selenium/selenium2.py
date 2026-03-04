@@ -48,7 +48,7 @@ def check_databricks_sessions():
 
 
 def send_notification(count):
-    message = "O número de sessões aumentou para: {count}"
+    message = f"O número de sessões aumentou para: {count}"
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
 
     response = requests.post(url, json={"chat_id": CHAT_ID, "text": message})
