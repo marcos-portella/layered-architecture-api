@@ -1,55 +1,59 @@
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import os
+import requests
+from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
-options = webdriver.ChromeOptions()
+load_dotenv()
 
-options.add_argument("--disable-blink-features=AutomationControlled")
-options.add_argument("window-size=1920,1080")
-options.add_argument("--incognito")
-options.add_argument(
-    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-)
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+TARGET_URL = "https://www.databricks.com/dataaisummit/agenda"
+DB_FILE = "last_count.txt"
 
-driver = webdriver.Chrome(options=options)
 
-wait = WebDriverWait(driver, 15)
+def get_last_count():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r") as f:
+            return int(f.read().strip())
+    return 37
 
-driver.get("http://www.pokemon.com/br/pokedex/pikachu")
 
-try:
-    wait.until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, ".pokedex-pokemon-pagination-title")
-        )
-    )
+def save_current_count(count):
+    with open(DB_FILE, "w") as f:
+        f.write(str(count))
 
-    altura = driver.find_element(
-        By.XPATH, "//span[contains(text(), 'Altura')]/following-sibling::span"
-    ).text
-    peso = driver.find_element(
-        By.XPATH, "//span[contains(text(), 'Peso')]/following-sibling::span"
-    ).text
 
-    tipos_elementos = driver.find_elements(By.CSS_SELECTOR, ".dtm-type ul li a")
-    tipos = [t.text for t in tipos_elementos]
+def check_databricks_sessions():
+    try:
+        # User-Agent ajuda a não ser bloqueado como "robô" simples
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(TARGET_URL, headers=headers, timeout=15)
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-    print("DADOS COLETADOS:")
-    print(f"Altura: {altura}")
-    print(f"Peso: {peso}")
-    print(f"Tipo(s): {', '.join(tipos)}")
+        # IMPORTANTE: Você precisará confirmar se a classe é 'session-count'
+        # inspecionando o elemento no navegador (F12)
+        session_element = soup.find("span", {"class": "session-count"})
 
-except TimeoutException:
-    print(
-        "Erro: O Pokémon não apareceu.")
-except Exception as e:
-    print(f"Ocorreu um erro inesperado: {e}")
+        if session_element:
+            return int(''.join(filter(str.isdigit, session_element.text)))
+        return None
+    except Exception as e:
+        print(f"Erro ao raspar dados: {e}")
+        return None
 
-finally:
-    time.sleep(5)
-    driver.quit()
-    print("Navegador fechado. Teste finalizado.")
+
+def send_notification(count):
+    message = f"O número de sessões aumentou para: {count}"
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    requests.post(url, data={"chat_id": CHAT_ID, "text": message})
+
+
+last_known = get_last_count()
+current = check_databricks_sessions()
+
+if current and current > last_known:
+    send_notification(current)
+    save_current_count(current)
+    print(f"Novo valor detectado: {current}. Notificação enviada.")
+else:
+    print(f"Sem alterações. Último: {last_known}, Atual: {current}")

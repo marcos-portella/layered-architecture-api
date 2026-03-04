@@ -1,0 +1,29 @@
+name: Monitor de Sessões Databricks
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Corre de hora em hora (minuto 0)
+  workflow_dispatch:      # Permite que você clique num botão para testar agora
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar bibliotecas
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Executar Script de Monitorização
+        env:
+          # Estas variáveis ficam escondidas no GitHub (passo 3 abaixo)
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python selenium2.py
