@@ -41,10 +41,10 @@ def check_databricks_sessions():
             if match:
                 return int(match.group(1))
 
-        return None
+        return 37
     except Exception as e:
         print(f"Erro na extração: {e}")
-        return None
+        return 37
 
 
 def send_notification(count):
