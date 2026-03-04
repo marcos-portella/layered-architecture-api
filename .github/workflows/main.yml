@@ -1,38 +1,38 @@
-name: Monitor de Sessões Databricks
+name: Monitor de Sessoes Databricks
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Corre de hora em hora (minuto 0)
-  workflow_dispatch:      # Permite que você clique num botão para testar agora
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configurar Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Instalar bibliotecas
+      - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4
+          pip install requests beautifulsoup4 python-dotenv
 
-      - name: Executar Script de Monitorização
+      - name: Run script
         env:
-          # Estas variáveis ficam escondidas no GitHub (passo 3 abaixo)
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python selenium2.py
 
-      - name: Salvar progresso (Commit and Push)
+      - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add last_count.txt
-          # O '|| exit 0' serve para não dar erro se não houver mudança no arquivo
-          git commit -m "chore: update session count [skip ci]" || exit 0
+          git commit -m "chore: update count [skip ci]" || exit 0
           git push
