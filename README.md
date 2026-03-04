@@ -1,5 +1,5 @@
 # Layered Architecture API (Customers & Orders)
-![Monitor Status](https://github.com/marcos-portella/layered-architecture-api/.github/workflows/databricks_monitor.yml/badge.svg)
+![Monitor Status](https://github.com/marcos-portella/layered-architecture-api/.github/workflows/main.yml/badge.svg)
 
 A professional REST API built with **FastAPI** and **MySQL**, focusing on clean code principles, security, and high-performance testing. This project manages customers and their orders using a decoupled **Service Layer** architecture.
 
