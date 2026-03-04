@@ -27,7 +27,7 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python selenium2.py
+        run: python selenium/selenium2.py
 
       - name: Commit and push changes
         run: |
