@@ -1,7 +1,5 @@
 A professional REST API built with **FastAPI** and **MySQL**, focusing on clean code principles, security, and high-performance testing. This project manages customers and their orders using a decoupled **Service Layer** architecture.
 
-## Live Demo & Automation
-
 ### API Access (Development Tunnel)
 The API is currently live and available for testing through a secure **ngrok** tunnel.
 * **Interactive Documentation:** [Explore Swagger UI](https://nonvagrantly-unreverting-rutha.ngrok-free.dev/docs)
